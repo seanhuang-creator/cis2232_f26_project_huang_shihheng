@@ -1,0 +1,134 @@
+package ca.hccis.penaltytracker.entity;
+
+import ca.hccis.penaltytracker.util.CisUtility;
+import com.google.gson.Gson;
+
+public class PenaltyTracker {
+
+    private int id;
+    private String homeTeam;
+    private String awayTeam;
+    private String date;
+    private String penalty;
+    private int quarter;
+    private String penalizedTeam;
+    private String ageDivision;
+    private String referee;
+    private double impactScore;
+
+
+    // Method to gather input from user
+    public void getInformation() {
+        id = CisUtility.getInputInt("Enter Penalty ID: ");
+        homeTeam = CisUtility.getInputString("Enter Home Team: ");
+        awayTeam = CisUtility.getInputString("Enter Away Team: ");
+        date = CisUtility.getInputString("Enter Date (yyyy-MM-dd): ");
+        penalty = CisUtility.getInputString("Enter Penalty/Infraction Type: ");
+        quarter = CisUtility.getInputInt("Enter Quarter (1-4): ");
+        penalizedTeam = CisUtility.getInputString("Enter Penalized Team: ");
+        ageDivision = CisUtility.getInputString("Enter Age Division: ");
+        referee = CisUtility.getInputString("Enter Referee Name: ");
+        impactScore = 0.0;
+    }
+
+    // Getters and Setters
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getHomeTeam() {
+        return homeTeam;
+    }
+
+    public void setHomeTeam(String homeTeam) {
+        this.homeTeam = homeTeam;
+    }
+
+    public String getAwayTeam() {
+        return awayTeam;
+    }
+
+    public void setAwayTeam(String awayTeam) {
+        this.awayTeam = awayTeam;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getPenalty() {
+        return penalty;
+    }
+
+    public void setPenalty(String penalty) {
+        this.penalty = penalty;
+    }
+
+    public int getQuarter() {
+        return quarter;
+    }
+
+    public void setQuarter(int quarter) {
+        this.quarter = quarter;
+    }
+
+    public String getPenalizedTeam() {
+        return penalizedTeam;
+    }
+
+    public void setPenalizedTeam(String penalizedTeam) {
+        this.penalizedTeam = penalizedTeam;
+    }
+
+    public String getAgeDivision() {
+        return ageDivision;
+    }
+
+    public void setAgeDivision(String ageDivision) {
+        this.ageDivision = ageDivision;
+    }
+
+    public String getReferee() {
+        return referee;
+    }
+
+    public void setReferee(String referee) {
+        this.referee = referee;
+    }
+
+    public double getImpactScore() {
+        return impactScore;
+    }
+
+    public void setImpactScore(double impactScore) {
+        this.impactScore = impactScore;
+    }
+
+    // JSON Serialization using Gson
+    public String toJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+
+    // ToString method for displaying all data
+    @Override
+    public String toString() {
+        return "Penalty Record ID: " + id +
+                "\n  Date: " + date + " | Division: " + ageDivision +
+                "\n  Match: " + homeTeam + " vs " + awayTeam +
+                "\n  Penalized Team: " + penalizedTeam +
+                "\n  Infraction: " + penalty + " (Q" + quarter + ")" +
+                "\n  Official: " + referee +
+                "\n  Impact Score: " + impactScore;
+    }
+}
