@@ -25,7 +25,7 @@ public class Controller {
             + "X) eXit" + System.lineSeparator()
             + "Option: ";
 
-    public static final String PATH = "d:\\cis2232\\";
+    public static final String PATH = "c:\\cis2232\\";
     public static final String FILE_NAME = "data_huang_shihheng.json"; // JSON file with my name
 
     public static void main(String[] args) {
