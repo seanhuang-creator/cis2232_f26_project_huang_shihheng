@@ -1,34 +1,56 @@
-## PEIFOA 2026 Tackle Penalty Tracker
+# PEIFOA 2026 Tackle Penalty Tracker
 
-Create an application that can be used by the Prince Edward Island Football Officials Association (PEIFOA) to track and analyze football penalty statistics across amateur tackle football games in the province.
+Sample cis2232 / cis2250 project
+Development Team
 
-Requirements & Functional Specifications:
-This application will need to track the following fields:
-
-* Game Date (Date of the game)
-* Home Team (Name of the home team)
-* Away Team (Name of the visiting team)
-* Age Division (Age group/division of the game)
-* Penalized Team (Name of the offending team)
-* Penalty Type (Type of infraction called)
-* Quarter (Quarter in which the penalty occurred)
-* Referee (Name of the official who flagged the infraction)
-* Impact Score (Calculated weight/severity of the penalty)
-
-Application Logic & Calculations:
-
-* Prompt the user to enter the game context (teams, date, age division) along with the penalty details, including the specific infraction, quarter, penalized team, and referee.
-* Calculate the Impact Score automatically based on the penalty severity and timing:
-Certain penalties have a higher impact on the game, and penalties occurring later in the game carry more weight (e.g., a minor offside in the 1st quarter generates a lower score, while a safety-related personal foul in the 4th quarter yields a high impact rating).
-* Store each penalty entry to build a centralized penalty log, replacing static paper/email penalty sheets.
-* Display, filter, and sort penalty data to allow PEIFOA to track team discipline, high-leverage game moments, official workload, and player safety trends across the province.
+* **Business Client:** Jake Henderson
+* **Lead Developer:** Sean
+* **Project Manager / QA:** Jonathan
 
 ---
 
-Project Metadata & Group Roles:
+## Description
 
-* Course: CIS2232 (Web Application) / CIS2250 (Mobile Application)
-* BA / Business Client: Jake Henderson
-* Developer: Sean
-* Project Manager / QA: Jonathan
-* Theme / Base Color: Black
+The Prince Edward Island Football Officials Association (PEIFOA) oversees officiating for amateur tackle football across the province. Every week, officials refereeing these island matchups submit paper or digital penalty sheets documenting every flag thrown during a game. Currently, these sheets are compiled and emailed to the association at the end of each week.
+
+While this data is invaluable, managing it through static emails makes it incredibly difficult to analyze trends, track team discipline, or evaluate officiating consistency. To modernize this process, this project introduces a centralized Penalty Tracker Application designed to streamline data entry and transform raw game summaries into actionable insights.
+
+Whenever a user inputs data from a weekly penalty sheet, the application captures vital context, including the game’s date, participating teams, age division, the specific infraction, and the official who made the call. A key innovation of this tracker is the automated Impact Score calculated field. By evaluating the severity of a penalty against the quarter in which it occurred, the app mathematically weighs each infraction. A minor offside in the first quarter yields a low score, whereas a safety-related personal foul in the fourth quarter generates a high impact rating.
+
+Ultimately, this project replaces a cumbersome email trail with a dynamic database. It provides PEIFOA with a clear, data-driven window into PEI football, highlighting high-leverage game moments, tracking referee workload, and identifying safety trends to improve the game for players and officials alike.
+
+---
+
+## Color
+
+* **Main Color:** Black
+* **Secondary Color:** White / Gray (Standard UI Contrast)
+
+---
+
+## Required Fields
+
+| Field Name | Data Type | Description |
+| --- | --- | --- |
+| `id` | `int` | Unique identifier for database table |
+| `homeTeam` | `String` | Name of the home team for the game |
+| `awayTeam` | `String` | Name of the visiting team for the game |
+| `date` | `String` | Date of game |
+| `penalty` | `String` | Infraction type |
+| `quarter` | `int` | Quarter infraction occurred |
+| `penalizedTeam` | `String` | Name of offending team |
+| `ageDivision` | `String` | Age division of game |
+| `referee` | `String` | Name of official who flagged the infraction |
+| `impactScore` | `Double` | Calculated impact penalty had |
+
+---
+
+## Calculation
+
+The calculation / processing needed when the user enters a new record involves determining the **Impact Score**. Certain penalties carry a higher base impact on the game, and the later the quarter in which the penalty occurs, the higher the weight it carries. The application uses the penalty type and the quarter to calculate and assign an overall impact score to that specific infraction before writing the record to the database.
+
+---
+
+## Report Details
+
+To be determined in future sprint
