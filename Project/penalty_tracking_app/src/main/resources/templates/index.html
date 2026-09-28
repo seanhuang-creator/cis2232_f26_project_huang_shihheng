@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragments/head :: headerFragment">
+    <title id="pageTitle">PEIFOA 2026 Tackle Penalty Tracker</title>
+</head>
+<body>
+<nav th:replace="fragments/navHeader :: navbar"></nav>
+
+<h2 class="title is-3 text-center">Impact Score by Team</h2>
+
+<!-- Time Range Filter -->
+<div class="container" style="max-width: 90%; margin: 20px auto;">
+    <div class="field">
+        <label class="label">Time Range</label>
+        <div class="control">
+            <div class="select" th:onChange="javascript:this.form.submit()">
+                <form th:action="@{/}" method="get" style="display: inline;">
+                    <select name="timeRange">
+                        <option th:value="all" th:selected="${timeRange == 'all'}">All Time</option>
+                        <option th:value="1year" th:selected="${timeRange == '1year'}">Past Year</option>
+                        <option th:value="6months" th:selected="${timeRange == '6months'}">Past 6 Months</option>
+                        <option th:value="3months" th:selected="${timeRange == '3months'}">Past 3 Months</option>
+                        <option th:value="1month" th:selected="${timeRange == '1month'}">Past Month</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div>
+    <p class="is-size-7" th:if="${timeRange != 'all'}">
+        Displaying data from <span th:text="${startDate}"></span> to present
+    </p>
+</div>
+
+<!-- Chart Container -->
+<div style="width: 90%; margin: 0 auto; overflow-x: auto;">
+    <div style="width: 2400px; height: 480px;">
+        <canvas id="penaltyChart"></canvas>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const teamNames = /*[[${teamNames}]]*/ [];
+    const impactScores = /*[[${impactScores}]]*/ [];
+    console.log('Team Names:', teamNames);
+    console.log('Impact Scores:', impactScores);
+
+    if (teamNames && teamNames.length > 0) {
+        const ctx = document.getElementById('penaltyChart');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: teamNames,
+                datasets: [{
+                    label: 'Cumulative Impact Score',
+                    data: impactScores,
+                    backgroundColor: '#485fc7',
+                    borderColor: '#364a8a',
+                    borderWidth: 1,
+                    barPercentage: 0.7,
+                    categoryPercentage: 0.8
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: '#ffffff',
+                            font: { size: 12 }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.15)'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#ffffff',
+                            font: { size: 12 }
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.15)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#ffffff',
+                            font: { size: 14 }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Team Cumulative Impact Score',
+                            color: '#ffffff',
+                            font: { size: 16, weight: 'bold' }
+                        }
+                    }
+                }
+            }
+        });
+    } else {
+        console.warn('No data to display!');
+    }
+    /*]]>*/
+</script>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+
+</body>
+</html>

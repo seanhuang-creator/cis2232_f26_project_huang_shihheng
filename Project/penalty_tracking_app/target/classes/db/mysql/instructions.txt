@@ -1,0 +1,11 @@
+Launch xampp and start the MySql
+
+For first time will need to run the createDatabase.sql script to setup your database
+(the script is in this folder and also copied to the project root).
+
+The sample data in createDatabase.sql comes from the
+"CIS2232 Penalty Tracker Real World Data.xlsx" sheet in the documentation folder.
+
+Notes:
+Check security - is there a password on the database and in the db config in the code
+(application.properties).

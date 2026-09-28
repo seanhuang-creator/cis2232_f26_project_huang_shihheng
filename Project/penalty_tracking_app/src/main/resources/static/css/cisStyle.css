@@ -1,0 +1,43 @@
+.skills-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+
+.skills-table th, .skills-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.skills-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.skills-table tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.centered2 {
+    text-align: center;
+}
+
+.icon i {
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.icon i:hover {
+    color: #007bff;
+}
+
+/* Penalty type dropdown optgroup styling */
+#penaltyTypeSelect optgroup {
+    background-color: #1e4d2b;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Note: Browser support for optgroup styling varies.
+   Background and text color are applied for better visual distinction. */

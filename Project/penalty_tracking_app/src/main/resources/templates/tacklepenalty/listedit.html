@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Penalty List for Edit</title>
+</head>
+<body>
+<nav th:replace="fragments/navHeader :: navbar"></nav>
+<div class="container my-4">
+    <h2 class="mb-3 text-center title">Penalty Record List for Edit</h2>
+    <h2 class="mb-3 text-center error" th:if="${not #strings.isEmpty(messageError)}" th:text="${messageError}">Message
+        from controller</h2>
+    <h2 class="mb-3 text-center success" th:if="${not #strings.isEmpty(messageSuccess)}" th:text="${messageSuccess}">
+        Message success from controller</h2>
+
+    <div class="table-responsive">
+        <form action="#" th:action="@{/tacklepenalty/list/edit/submit}" th:object="${form}"
+              method="post">
+            <fieldset>
+                <input type="submit" id="submitButton" th:value="Save">
+                <input type="reset" id="resetButton" name="reset" th:value="Reset"/>
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-dark text-center">
+                    <tr>
+                        <th>ID</th>
+                        <th>Date</th>
+                        <th>Home Team</th>
+                        <th>Away Team</th>
+                        <th>Penalty</th>
+                        <th>Quarter</th>
+                        <th>Penalized Team</th>
+                        <th>Offending Player</th>
+                        <th>Age Division</th>
+                        <th>Referee</th>
+                        <th>Impact Score</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <tr th:each="current,itemStat : ${form.penalties}">
+                        <td><input th:field="*{penalties[__${itemStat.index}__].id}"/></td>
+                        <td><input th:field="*{penalties[__${itemStat.index}__].date}"></td>
+                        <td><input th:field="*{penalties[__${itemStat.index}__].homeTeam}"></td>
+                        <td><input th:field="*{penalties[__${itemStat.index}__].awayTeam}"></td>
+                        <td><input th:field="*{penalties[__${itemStat.index}__].penalty}"></td>
+                        <td><input th:field="*{penalties[__${itemStat.index}__].quarter}"></td>
+                        <td><input th:field="*{penalties[__${itemStat.index}__].penalizedTeam}"></td>
+                        <td><input th:field="*{penalties[__${itemStat.index}__].offendingPlayer}"></td>
+                        <td><input th:field="*{penalties[__${itemStat.index}__].ageDivision}"></td>
+                        <td><input th:field="*{penalties[__${itemStat.index}__].referee}"></td>
+                        <td><input th:field="*{penalties[__${itemStat.index}__].impactScore}"></td>
+                    </tr>
+
+                    <!-- Message when no data -->
+                    <tr th:if="${#lists.isEmpty(form.penalties)}">
+                        <td colspan="11" class="text-center text-muted py-4">
+                            No penalties found.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </form>
+    </div>
+
+
+</div>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

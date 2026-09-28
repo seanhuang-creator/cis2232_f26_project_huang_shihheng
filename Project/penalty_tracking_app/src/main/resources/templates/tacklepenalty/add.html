@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle" th:text="#{label.add.edit}">Label Add/Edit</title>
+    <style>
+        /* 6 optgroup labels: dark green background + white text */
+        select optgroup {
+            background-color: #0D3311 !important;
+            color: #ffffff !important;
+            font-weight: bold;
+        }
+        /* Penalty options: black background + white text */
+        select option {
+            background-color: #121212 !important;
+            color: #ffffff !important;
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="fragments/navHeader :: navbar"></nav>
+<div class="container has-text-centered">
+    <h2 class="title is-2" th:if="${tacklePenalty.id != null}" th:text="#{label.edit.order}">label Edit</h2>
+    <h2 class="title is-2" th:if="${tacklePenalty.id == null}" th:text="#{label.add.order}">label Add</h2>
+
+    <form th:action="@{/tacklepenalty/submit}" method="post" class="wbb" style="display:inline-block;text-align:left!important">
+
+        <!-- Hidden ID field -->
+        <input type="hidden" name="id" th:value="${tacklePenalty.id}" />
+
+        <!-- Hidden fields to store actual team values for form submission -->
+        <input type="hidden" id="homeTeamValue" name="homeTeam" th:value="${tacklePenalty.homeTeam}" />
+        <input type="hidden" id="awayTeamValue" name="awayTeam" th:value="${tacklePenalty.awayTeam}" />
+        <input type="hidden" id="penalizedTeamValue" name="penalizedTeam" th:value="${tacklePenalty.penalizedTeam}" />
+        <!-- Hidden field to store actual referee value for form submission -->
+        <input type="hidden" id="refereeValue" name="referee" th:value="${tacklePenalty.referee}" />
+
+        <p>
+            <label>Game Date:</label>
+            <input type="date" name="date" th:value="${#dates.format(tacklePenalty.date, 'yyyy-MM-dd')}" placeholder="YYYY-MM-DD" />
+        </p>
+        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.date}')}" th:errors="${tacklePenalty.date}"></p>
+
+        <p>
+            <label>Home Team:</label>
+            <select id="homeTeamSelect" onchange="handleTeamSelect('home')">
+                <option value="" disabled selected hidden>-- Select Team --</option>
+                <option value="__MANUAL__">(Add new team manually)</option>
+                <option th:each="team : ${teamNames}"
+                        th:value="${team}"
+                        th:text="${team}"
+                        th:if="${team != null and team != ''}"
+                        th:selected="${team == tacklePenalty.homeTeam}"></option>
+            </select>
+            <input type="text" id="homeTeamManual" style="display:none; margin-top: 8px;" placeholder="Enter team name manually" />
+        </p>
+        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.homeTeam}')}" th:errors="${tacklePenalty.homeTeam}"></p>
+
+        <p>
+            <label>Away Team:</label>
+            <select id="awayTeamSelect" onchange="handleTeamSelect('away')">
+                <option value="" disabled selected hidden>-- Select Team --</option>
+                <option value="__MANUAL__">(Add new team manually)</option>
+                <option th:each="team : ${teamNames}"
+                        th:value="${team}"
+                        th:text="${team}"
+                        th:if="${team != null and team != ''}"
+                        th:selected="${team == tacklePenalty.awayTeam}"></option>
+            </select>
+            <input type="text" id="awayTeamManual" style="display:none; margin-top: 8px;" placeholder="Enter team name manually" />
+        </p>
+        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.awayTeam}')}" th:errors="${tacklePenalty.awayTeam}"></p>
+
+        <p>
+            <label>Penalty Type:</label>
+            <select name="penalty" id="penaltyTypeSelect" onchange="calculateImpactScore()">
+                <option value="" disabled selected hidden>-- Select --</option>
+                <optgroup label="0.5 score" style="background-color: #0D3311; color: #ffffff;">
+                    <option value="Mouth Guard Warning" th:selected="${tacklePenalty.penalty == 'Mouth Guard Warning'}" style="background-color: #121212; color: #ffffff;">Mouth Guard Warning</option>
+                </optgroup>
+                <optgroup label="1.0 score" style="background-color: #0D3311; color: #ffffff;">
+                    <option value="Illegal Formation" th:selected="${tacklePenalty.penalty == 'Illegal Formation'}" style="background-color: #121212; color: #ffffff;">Illegal Formation</option>
+                    <option value="Illegal Kick Out of Bounds" th:selected="${tacklePenalty.penalty == 'Illegal Kick Out of Bounds'}" style="background-color: #121212; color: #ffffff;">Illegal Kick Out of Bounds</option>
+                    <option value="Illegal Procedure" th:selected="${tacklePenalty.penalty == 'Illegal Procedure'}" style="background-color: #121212; color: #ffffff;">Illegal Procedure</option>
+                    <option value="Intentional Grounding" th:selected="${tacklePenalty.penalty == 'Intentional Grounding'}" style="background-color: #121212; color: #ffffff;">Intentional Grounding</option>
+                    <option value="No Yards" th:selected="${tacklePenalty.penalty == 'No Yards'}" style="background-color: #121212; color: #ffffff;">No Yards</option>
+                    <option value="Offside" th:selected="${tacklePenalty.penalty == 'Offside'}" style="background-color: #121212; color: #ffffff;">Offside</option>
+                    <option value="Procedure" th:selected="${tacklePenalty.penalty == 'Procedure'}" style="background-color: #121212; color: #ffffff;">Procedure</option>
+                    <option value="Time Count Violation" th:selected="${tacklePenalty.penalty == 'Time Count Violation'}" style="background-color: #121212; color: #ffffff;">Time Count Violation</option>
+                </optgroup>
+                <optgroup label="2.0 score" style="background-color: #0D3311; color: #ffffff;">
+                    <option value="Holding" th:selected="${tacklePenalty.penalty == 'Holding'}" style="background-color: #121212; color: #ffffff;">Holding</option>
+                    <option value="Illegal Block in the Back" th:selected="${tacklePenalty.penalty == 'Illegal Block in the Back'}" style="background-color: #121212; color: #ffffff;">Illegal Block in the Back</option>
+                    <option value="Illegal Use of Hands" th:selected="${tacklePenalty.penalty == 'Illegal Use of Hands'}" style="background-color: #121212; color: #ffffff;">Illegal Use of Hands</option>
+                    <option value="Objectionable Conduct" th:selected="${tacklePenalty.penalty == 'Objectionable Conduct'}" style="background-color: #121212; color: #ffffff;">Objectionable Conduct</option>
+                    <option value="Tandem Buck Block" th:selected="${tacklePenalty.penalty == 'Tandem Buck Block'}" style="background-color: #121212; color: #ffffff;">Tandem Buck Block</option>
+                </optgroup>
+                <optgroup label="3.0 score" style="background-color: #0D3311; color: #ffffff;">
+                    <option value="Pass Interference" th:selected="${tacklePenalty.penalty == 'Pass Interference'}" style="background-color: #121212; color: #ffffff;">Pass Interference</option>
+                </optgroup>
+                <optgroup label="5.0 score" style="background-color: #0D3311; color: #ffffff;">
+                    <option value="Personal Foul" th:selected="${tacklePenalty.penalty == 'Personal Foul'}" style="background-color: #121212; color: #ffffff;">Personal Foul</option>
+                    <option value="Unnecessary Roughness" th:selected="${tacklePenalty.penalty == 'Unnecessary Roughness'}" style="background-color: #121212; color: #ffffff;">Unnecessary Roughness</option>
+                </optgroup>
+                <optgroup label="Other (2.0 score)" style="background-color: #0D3311; color: #ffffff;">
+                    <option value="Default Severity" th:selected="${tacklePenalty.penalty == 'Default Severity'}" style="background-color: #121212; color: #ffffff;">Default Severity</option>
+                </optgroup>
+            </select>
+        </p>
+        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.penalty}')}" th:errors="${tacklePenalty.penalty}"></p>
+
+        <!-- Quarter changed to dropdown -->
+        <p>
+            <label>Quarter:</label>
+            <select name="quarter" id="quarterSelect" onchange="calculateImpactScore()">
+                <option value="" disabled selected hidden>-- Select Quarter --</option>
+                <option value="1" th:selected="${tacklePenalty.quarter == 1}">1</option>
+                <option value="2" th:selected="${tacklePenalty.quarter == 2}">2</option>
+                <option value="3" th:selected="${tacklePenalty.quarter == 3}">3</option>
+                <option value="4" th:selected="${tacklePenalty.quarter == 4}">4</option>
+            </select>
+        </p>
+        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.quarter}')}" th:errors="${tacklePenalty.quarter}"></p>
+
+        <!-- Penalized Team Dynamic Dropdown -->
+        <p>
+            <label>Penalized Team:</label>
+            <select id="penalizedTeamSelect">
+                <option value="" disabled selected hidden>-- Select Team --</option>
+            </select>
+        </p>
+        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.penalizedTeam}')}" th:errors="${tacklePenalty.penalizedTeam}"></p>
+
+        <p>
+            <label>Offending Player #:</label>
+            <input type="number" min="0" name="offendingPlayer" th:value="${tacklePenalty.offendingPlayer}" />
+        </p>
+        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.offendingPlayer}')}" th:errors="${tacklePenalty.offendingPlayer}"></p>
+
+        <p>
+            <label>Age Division:</label>
+            <select name="ageDivision">
+                <option value="" disabled selected hidden>-- Select --</option>
+                <option th:each="codeValue : ${session.ageDivisions}"
+                        th:value="${codeValue.englishDescription}"
+                        th:text="${codeValue.englishDescription}"
+                        th:selected="${codeValue.englishDescription == tacklePenalty.ageDivision}"></option>
+            </select>
+        </p>
+        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.ageDivision}')}" th:errors="${tacklePenalty.ageDivision}"></p>
+
+        <!-- Dynamic Referee Dropdown -->
+        <p>
+            <label>Referee:</label>
+            <select id="refereeSelect" onchange="handleRefereeSelect()">
+                <option value="" disabled selected hidden>-- Select --</option>
+                <option value="__MANUAL__">(Add Manually)</option>
+                <option th:each="ref : ${referees}"
+                        th:value="${ref}"
+                        th:text="${ref}"
+                        th:if="${ref != null and ref != ''}"
+                        th:selected="${ref == tacklePenalty.referee}"></option>
+            </select>
+            <input type="text" id="refereeManual" style="display:none; margin-top: 8px;" placeholder="Enter referee name manually" />
+        </p>
+        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.referee}')}" th:errors="${tacklePenalty.referee}"></p>
+
+        <p>
+            <label>Impact Score (calculated):</label>
+            <input type="number" step="0.1" id="impactScoreInput" name="impactScore" th:value="${tacklePenalty.impactScore}" readonly="readonly" />
+        </p>
+        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.impactScore}')}" th:errors="${tacklePenalty.impactScore}"></p>
+
+        <!-- Submit & Cancel buttons -->
+        <div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px !important;">
+            <button type="submit" th:text="#{label.submit}">Submit</button>
+            <button type="button" onclick="confirmCancel()">Cancel</button>
+        </div>
+
+        <script>
+            function confirmCancel() {
+                if (confirm("Are you sure you want to cancel? Any unsaved changes will be lost.")) {
+                    window.history.back();
+                }
+            }
+
+            /**
+             * Real-time dynamic Impact Score calculation
+             */
+            function calculateImpactScore() {
+                const penaltySelect = document.getElementById('penaltyTypeSelect');
+                const quarterSelect = document.getElementById('quarterSelect');
+                const impactInput = document.getElementById('impactScoreInput');
+
+                const penalty = penaltySelect.value;
+                const quarter = parseInt(quarterSelect.value);
+
+                if (!penalty || isNaN(quarter)) {
+                    return;
+                }
+
+                // Base score reference table
+                let baseScore = 2.0; // Default Severity
+                switch (penalty) {
+                    case 'Mouth Guard Warning':
+                        baseScore = 0.5;
+                        break;
+                    case 'Illegal Formation':
+                    case 'Illegal Kick Out of Bounds':
+                    case 'Illegal Procedure':
+                    case 'Intentional Grounding':
+                    case 'No Yards':
+                    case 'Offside':
+                    case 'Procedure':
+                    case 'Time Count Violation':
+                        baseScore = 1.0;
+                        break;
+                    case 'Holding':
+                    case 'Illegal Block in the Back':
+                    case 'Illegal Use of Hands':
+                    case 'Objectionable Conduct':
+                    case 'Tandem Buck Block':
+                    case 'Default Severity':
+                        baseScore = 2.0;
+                        break;
+                    case 'Pass Interference':
+                        baseScore = 3.0;
+                        break;
+                    case 'Personal Foul':
+                    case 'Unnecessary Roughness':
+                        baseScore = 5.0;
+                        break;
+                }
+
+                // Quarter multiplier reference table
+                let multiplier = 1.0;
+                switch (quarter) {
+                    case 1: multiplier = 1.0; break;
+                    case 2: multiplier = 2.0; break;
+                    case 3: multiplier = 3.0; break;
+                    case 4: multiplier = 4.0; break;
+                }
+
+                // Calculate and display to 1 decimal place
+                const finalScore = (baseScore * multiplier).toFixed(1);
+                impactInput.value = finalScore;
+            }
+
+            function handleRefereeSelect() {
+                const select = document.getElementById('refereeSelect');
+                const manualInput = document.getElementById('refereeManual');
+                const hiddenField = document.getElementById('refereeValue');
+
+                if (select.value === '__MANUAL__') {
+                    select.style.display = 'none';
+                    manualInput.style.display = 'block';
+                    manualInput.focus();
+                    hiddenField.value = '';
+                } else {
+                    select.style.display = 'block';
+                    manualInput.style.display = 'none';
+                    manualInput.value = '';
+                    hiddenField.value = select.value;
+                }
+            }
+
+            function handleTeamSelect(type) {
+                const select = document.getElementById(type + 'TeamSelect');
+                const manualInput = document.getElementById(type + 'TeamManual');
+                const hiddenField = document.getElementById(type + 'TeamValue');
+
+                if (select.value === '__MANUAL__') {
+                    select.style.display = 'none';
+                    manualInput.style.display = 'block';
+                    manualInput.focus();
+                    hiddenField.value = '';
+                } else {
+                    select.style.display = 'block';
+                    manualInput.style.display = 'none';
+                    manualInput.value = '';
+                    hiddenField.value = select.value;
+                }
+
+                checkDuplicateTeams();
+                updatePenalizedTeamOptions();
+            }
+
+            function getTeamValue(type) {
+                const select = document.getElementById(type + 'TeamSelect');
+                const manualInput = document.getElementById(type + 'TeamManual');
+
+                if (select.value === '__MANUAL__') {
+                    return manualInput.value.trim();
+                }
+                return select.value;
+            }
+
+            function resetAwayTeam() {
+                const awaySelect = document.getElementById('awayTeamSelect');
+                const awayManual = document.getElementById('awayTeamManual');
+                const awayHidden = document.getElementById('awayTeamValue');
+
+                awaySelect.value = '';
+                awaySelect.style.display = 'block';
+                awayManual.value = '';
+                awayManual.style.display = 'none';
+                awayHidden.value = '';
+            }
+
+            function checkDuplicateTeams() {
+                const homeTeam = getTeamValue('home');
+                const awayTeam = getTeamValue('away');
+
+                if (homeTeam && awayTeam && homeTeam.toLowerCase() === awayTeam.toLowerCase()) {
+                    alert('Away Team cannot be the same as Home Team.');
+                    resetAwayTeam();
+                }
+            }
+
+            function updatePenalizedTeamOptions() {
+                const homeTeam = getTeamValue('home');
+                const awayTeam = getTeamValue('away');
+                const penalizedSelect = document.getElementById('penalizedTeamSelect');
+                const hiddenField = document.getElementById('penalizedTeamValue');
+
+                const currentSelectedValue = hiddenField.value;
+
+                penalizedSelect.innerHTML = '<option value="" disabled selected hidden>-- Select Team --</option>';
+
+                if (homeTeam && awayTeam) {
+                    const optHome = document.createElement('option');
+                    optHome.value = homeTeam;
+                    optHome.textContent = homeTeam;
+                    penalizedSelect.appendChild(optHome);
+
+                    const optAway = document.createElement('option');
+                    optAway.value = awayTeam;
+                    optAway.textContent = awayTeam;
+                    penalizedSelect.appendChild(optAway);
+
+                    if (currentSelectedValue === homeTeam || currentSelectedValue === awayTeam) {
+                        penalizedSelect.value = currentSelectedValue;
+                    } else {
+                        penalizedSelect.value = '';
+                        hiddenField.value = '';
+                    }
+                } else {
+                    penalizedSelect.value = '';
+                    hiddenField.value = '';
+                }
+            }
+
+            function validateForm() {
+                const homeTeam = getTeamValue('home');
+                const awayTeam = getTeamValue('away');
+                const penalizedTeam = document.getElementById('penalizedTeamValue').value;
+
+                if (!homeTeam || !awayTeam) {
+                    alert('Please select or enter both Home Team and Away Team.');
+                    return false;
+                }
+
+                if (homeTeam.toLowerCase() === awayTeam.toLowerCase()) {
+                    alert('Away Team cannot be the same as Home Team.');
+                    resetAwayTeam();
+                    return false;
+                }
+
+                if (!penalizedTeam) {
+                    alert('Please select a Penalized Team.');
+                    return false;
+                }
+
+                return true;
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                const penalizedSelect = document.getElementById('penalizedTeamSelect');
+
+                function checkPenalizedAccess(e) {
+                    const homeTeam = getTeamValue('home');
+                    const awayTeam = getTeamValue('away');
+
+                    if (!homeTeam || !awayTeam) {
+                        e.preventDefault();
+                        penalizedSelect.blur();
+                        alert('Please select both Home Team and Away Team first.');
+                    }
+                }
+
+                penalizedSelect.addEventListener('mousedown', checkPenalizedAccess);
+                penalizedSelect.addEventListener('keydown', function(e) {
+                    if (e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowDown') {
+                        checkPenalizedAccess(e);
+                    }
+                });
+
+                penalizedSelect.addEventListener('change', function() {
+                    document.getElementById('penalizedTeamValue').value = this.value;
+                });
+
+                updatePenalizedTeamOptions();
+                calculateImpactScore();
+
+                const form = document.querySelector('form.wbb');
+                if (form) {
+                    form.addEventListener('submit', function(e) {
+                        if (!validateForm()) {
+                            e.preventDefault();
+                            return;
+                        }
+
+                        const homeManual = document.getElementById('homeTeamManual');
+                        const awayManual = document.getElementById('awayTeamManual');
+                        const refereeManual = document.getElementById('refereeManual');
+
+                        const homeSelect = document.getElementById('homeTeamSelect');
+                        const awaySelect = document.getElementById('awayTeamSelect');
+                        const refereeSelect = document.getElementById('refereeSelect');
+
+                        if (homeSelect.value === '__MANUAL__') {
+                            document.getElementById('homeTeamValue').value = homeManual.value;
+                        }
+                        if (awaySelect.value === '__MANUAL__') {
+                            document.getElementById('awayTeamValue').value = awayManual.value;
+                        }
+                        if (refereeSelect.value === '__MANUAL__') {
+                            document.getElementById('refereeValue').value = refereeManual.value;
+                        }
+                    });
+                }
+
+                // Referee event listeners
+                document.getElementById('refereeManual').addEventListener('input', function() {
+                    document.getElementById('refereeValue').value = this.value;
+                });
+                document.getElementById('refereeSelect').addEventListener('change', function() {
+                    if (this.value && this.value !== '__MANUAL__') {
+                        document.getElementById('refereeValue').value = this.value;
+                    }
+                });
+
+                // Team event listeners
+                document.getElementById('homeTeamManual').addEventListener('input', function() {
+                    document.getElementById('homeTeamValue').value = this.value;
+                    checkDuplicateTeams();
+                    updatePenalizedTeamOptions();
+                });
+                document.getElementById('awayTeamManual').addEventListener('input', function() {
+                    document.getElementById('awayTeamValue').value = this.value;
+                    checkDuplicateTeams();
+                    updatePenalizedTeamOptions();
+                });
+
+                document.getElementById('homeTeamSelect').addEventListener('change', function() {
+                    if (this.value && this.value !== '__MANUAL__') {
+                        document.getElementById('homeTeamValue').value = this.value;
+                    }
+                    checkDuplicateTeams();
+                    updatePenalizedTeamOptions();
+                });
+                document.getElementById('awayTeamSelect').addEventListener('change', function() {
+                    if (this.value && this.value !== '__MANUAL__') {
+                        document.getElementById('awayTeamValue').value = this.value;
+                    }
+                    checkDuplicateTeams();
+                    updatePenalizedTeamOptions();
+                });
+            });
+        </script>
+    </form>
+
+</div>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

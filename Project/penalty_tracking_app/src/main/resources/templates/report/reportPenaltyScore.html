@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Report</title>
+</head>
+<body>
+<style scoped="scoped">input:not(.hidden) {
+    display: inline-block;
+    float: right
+}
+
+.cd {
+    color: #F00 !important;
+    font-weight: bold;
+    margin-bottom: -48px
+}
+
+label {
+    margin-right: 8px
+}</style>
+<nav th:replace="fragments/navHeader :: navbar"></nav>
+
+<div class="container has-text-centered">
+    <h2 class="title is-2" th:text="#{label.report.score.range}">_</h2>
+
+    <form th:action="@{/report/penalty/score/submit}" method="post" class="wbb"
+          style="display:inline-block;text-align:left!important">
+        <label for="minScore">Min Impact Score: </label><br/>
+        <input id="minScore" type="number" step="0.1" th:field="${reportInput.minScore}"><br/>
+
+        <label>Max Impact Score: </label><br/>
+        <input type="number" step="0.1" th:field="${reportInput.maxScore}"><br/>
+
+        <br/>
+        <button style="display:block;margin-top:24px!important" class="centered">Submit</button>
+    </form>
+
+    <p th:if="${not #strings.isEmpty(message)}" th:text="#{error.message.no.data.found.name}">not found</p>
+    <!--https://stackoverflow.com/a/33106495-->
+    <table class="wbb centered" th:if="${not #lists.isEmpty(reportInput.tacklePenalties)}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Home Team</th>
+            <th>Away Team</th>
+            <th>Penalty</th>
+            <th>Quarter</th>
+            <th>Penalized Team</th>
+            <th>Offending Player</th>
+            <th>Age Division</th>
+            <th>Referee</th>
+            <th>Impact Score</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item,iterStat : ${reportInput.tacklePenalties}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.date}"></td>
+            <td th:text="${item.homeTeam}"></td>
+            <td th:text="${item.awayTeam}"></td>
+            <td th:text="${item.penalty}"></td>
+            <td th:text="${item.quarter}"></td>
+            <td th:text="${item.penalizedTeam}"></td>
+            <td th:text="${item.offendingPlayer}"></td>
+            <td th:text="${item.ageDivision}"></td>
+            <td th:text="${item.referee}"></td>
+            <td th:text="${item.impactScore}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<br></br>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

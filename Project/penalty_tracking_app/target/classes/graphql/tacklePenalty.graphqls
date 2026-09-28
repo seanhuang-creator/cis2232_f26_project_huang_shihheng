@@ -1,0 +1,38 @@
+type TacklePenalty {
+  id: Int
+  homeTeam: String
+  awayTeam: String
+  date: String
+  penalty: String
+  quarter: Int
+  penalizedTeam: String
+  offendingPlayer: Int
+  ageDivision: String
+  referee: String
+  impactScore: Float
+}
+
+input TacklePenaltyInput {
+  homeTeam: String!
+  awayTeam: String!
+  date: String!
+  penalty: String!
+  quarter: Int!
+  penalizedTeam: String!
+  offendingPlayer: Int
+  ageDivision: String
+  referee: String!
+}
+
+type Query {
+  penalties: [TacklePenalty!]!
+  penaltyById(id: Int!): TacklePenalty
+  findByTeam(name: String!): [TacklePenalty!]!
+  findByReferee(name: String!): [TacklePenalty!]!
+}
+
+type Mutation {
+  createPenalty(input: TacklePenaltyInput!): TacklePenalty!
+  updatePenalty(id: Int!, input: TacklePenaltyInput!): TacklePenalty!
+  deletePenalty(id: Int!): Boolean!
+}

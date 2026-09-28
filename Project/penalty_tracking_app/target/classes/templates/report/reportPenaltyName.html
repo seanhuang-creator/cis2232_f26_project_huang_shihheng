@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Report</title>
+</head>
+<body>
+<style scoped="scoped">input:not(.hidden) {
+    display: inline-block;
+    float: right
+}
+
+.cd {
+    color: #F00 !important;
+    font-weight: bold;
+    margin-bottom: -48px
+}
+
+label {
+    margin-right: 8px
+}</style>
+<nav th:replace="fragments/navHeader :: navbar"></nav>
+
+
+<div class="container has-text-centered">
+    <h2 class="title is-2" th:text="#{label.report.referee.team.report}">_</h2>
+
+    <form th:action="@{/report/penalty/name/submit}" method="post" class="wbb"
+          style="display:inline-block;text-align:left!important">
+
+        <!-- Hidden field to store actual referee/team value for form submission -->
+        <input type="hidden" id="refereeValue" name="name" th:value="${reportInput.name}" />
+
+        <p>
+            <label>Name (Referee/Team): </label>
+            <!-- Dropdown matching add.html style with A-Z sorted referees -->
+            <select id="refereeSelect" onchange="handleRefereeSelect()">
+                <option value="" disabled selected hidden>-- Select --</option>
+                <option value="__MANUAL__">(Add Manually)</option>
+                <option th:each="ref : ${referees}"
+                        th:value="${ref}"
+                        th:text="${ref}"
+                        th:if="${ref != null and ref != ''}"
+                        th:selected="${ref == reportInput.name}"></option>
+            </select>
+            <!-- Manual input field -->
+            <input type="text" id="refereeManual" style="display:none; margin-top: 8px;" placeholder="Enter name manually" />
+        </p>
+        <br></br>
+        <button style="display:block;margin-top:24px!important" class="centered">Submit</button>
+    </form>
+
+    <script>
+        function handleRefereeSelect() {
+            const select = document.getElementById('refereeSelect');
+            const manualInput = document.getElementById('refereeManual');
+            const hiddenField = document.getElementById('refereeValue');
+
+            if (select.value === '__MANUAL__') {
+                select.style.display = 'none';
+                manualInput.style.display = 'block';
+                manualInput.focus();
+                hiddenField.value = '';
+            } else {
+                select.style.display = 'block';
+                manualInput.style.display = 'none';
+                manualInput.value = '';
+                hiddenField.value = select.value;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const select = document.getElementById('refereeSelect');
+            const manualInput = document.getElementById('refereeManual');
+            const hiddenField = document.getElementById('refereeValue');
+
+            // 頁面載入時初始化：檢查隱藏欄位是否有值，並自動對應選單或手動輸入框
+            if (hiddenField.value) {
+                let found = false;
+                for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value === hiddenField.value) {
+                        select.value = hiddenField.value;
+                        found = true;
+                        break;
+                    }
+                }
+                // 若該值不在下拉選單內，切換為手動輸入模式
+                if (!found) {
+                    select.value = '__MANUAL__';
+                    select.style.display = 'none';
+                    manualInput.style.display = 'block';
+                    manualInput.value = hiddenField.value;
+                }
+            }
+
+            // Handle manual input typing
+            manualInput.addEventListener('input', function() {
+                hiddenField.value = this.value;
+            });
+
+            // Handle select change
+            select.addEventListener('change', function() {
+                if (this.value && this.value !== '__MANUAL__') {
+                    hiddenField.value = this.value;
+                }
+            });
+        });
+    </script>
+
+    <p th:if="${not #strings.isEmpty(message)}" th:text="#{error.message.no.data.found.name}">not found</p>
+    <!--https://stackoverflow.com/a/33106495-->
+    <table class="wbb centered" th:if="${not #lists.isEmpty(reportInput.tacklePenalties)}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Home Team</th>
+            <th>Away Team</th>
+            <th>Penalty</th>
+            <th>Quarter</th>
+            <th>Penalized Team</th>
+            <th>Offending Player</th>
+            <th>Age Division</th>
+            <th>Referee</th>
+            <th>Impact Score</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item,iterStat : ${reportInput.tacklePenalties}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.date}"></td>
+            <td th:text="${item.homeTeam}"></td>
+            <td th:text="${item.awayTeam}"></td>
+            <td th:text="${item.penalty}"></td>
+            <td th:text="${item.quarter}"></td>
+            <td th:text="${item.penalizedTeam}"></td>
+            <td th:text="${item.offendingPlayer}"></td>
+            <td th:text="${item.ageDivision}"></td>
+            <td th:text="${item.referee}"></td>
+            <td th:text="${item.impactScore}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<br></br>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,592 @@
+.skills-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+
+.skills-table th, .skills-table td {
+    border: 1px solid #333;
+    padding: 8px 10px;
+    text-align: center;
+}
+
+.skills-table th {
+    background-color: #1f1f1f;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.skills-table tr:nth-child(even) {
+    background-color: #242424;
+}
+
+.centered2 {
+    text-align: center;
+}
+
+.icon i {
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.icon i:hover {
+    color: #007bff;
+}
+
+/* --------------- Global Styles --------------- */
+
+html {
+    overflow-x: auto !important;
+    background-color: #000000 !important;
+}
+
+:root {
+    --main-color-light: #000000;
+    --main-color-primary: #000000;
+    --main-color-dark: #0a192f;
+    --main-color-text: #ffffff;
+    --main-color-bright: #ffc107;
+}
+
+.cd {
+    color: #F00 !important;
+}
+
+label {
+    margin-right: 8px;
+    color: #ffffff !important;
+}
+
+body {
+    position: relative;
+    min-height: 100vh;
+    width: 100% !important;
+    background: #000000 !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: auto !important;
+}
+
+/* Global text color fix */
+body, p, strong, th, td, span, div, h1, h2, h3, h4, h5, h6 {
+    color: #ffffff !important;
+}
+
+.logo {
+    height: 40px;
+}
+
+.no-link {
+    color: inherit;
+}
+
+.no-link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+.table-title {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Table container - no longer using overflow-x, let DataTables handle it */
+.table-container {
+    margin: 0 auto;
+    width: 100% !important;
+}
+
+.dataTables_wrapper {
+    margin: 0 auto;
+    width: 100% !important;
+}
+
+.field-id {
+    width: 20px;
+    display: none;
+}
+
+.flex-sp-btw {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.nav-flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Top navigation bar full width */
+.nav, navbar, .navbar, nav {
+    margin-bottom: 30px;
+    background: var(--main-color-dark) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.ftr {
+    margin-top: 50px;
+    padding: 20px;
+    background: var(--main-color-dark);
+    color: var(--main-color-text);
+    bottom: 0;
+    width: 100%;
+}
+
+.vert-align {
+    display: flex;
+    align-items: center;
+}
+
+.centered {
+    margin: 0 auto;
+}
+
+.ddl {
+    margin: 0 8px;
+    font-size: 28px;
+}
+
+.navbar-link:not(.is-arrowless)::after {
+    border-color: var(--main-color-primary) !important;
+}
+
+.navbar-link, .navbar-link:focus, .navbar-bgn {
+    color: var(--main-color-text) !important;
+}
+
+.title {
+    color: var(--main-color-bright) !important;
+}
+
+.accent {
+    color: var(--main-color-bright) !important;
+}
+
+.accent-background {
+    background-color: var(--main-color-dark) !important;
+}
+
+.error {
+    color: red !important;
+}
+
+.success {
+    color: green !important;
+}
+
+.navbar-link:hover, .navbar-link:active {
+    color: var(--main-color-dark) !important;
+}
+
+.navbar-item:visited {
+    color: var(--main-color-text) !important;
+}
+
+.navbar-bgn {
+    padding: 1rem 1rem;
+}
+
+@media (max-width: 1023px) {
+    .navbar-bgn {
+        padding: 1rem .75rem !important;
+    }
+    .navbar-brand {
+        right: 0;
+        position: absolute;
+        z-index: 1;
+    }
+    #navbarBasicExample {
+        width: 100%;
+        position: absolute;
+    }
+    .navbar-link:not(.is-arrowless)::after {
+        margin-right: 3.15px;
+    }
+    .ddl {
+        display: inline-block;
+        margin-top: 16px !important;
+    }
+    .nav {
+        margin-bottom: 16px !important;
+    }
+    .navbar-menu.is-active {
+        padding: 0;
+    }
+    .navbar-index {
+        padding-bottom: 0.86rem;
+        padding-top: 0.86rem;
+        margin-right: 52px;
+    }
+}
+
+.wbb, .ddl {
+    padding: 0 8px !important;
+    background-color: #2b2b2b !important;
+    border: 1px solid #3d3d3d !important;
+    border-radius: 12px !important;
+    white-space: nowrap !important;
+}
+
+@media screen and (min-width: 1024px) {
+    .navbar-dropdown .navbar-item {
+        white-space: unset !important;
+    }
+    .navbar-dropdown a.navbar-item {
+        padding-right: 16px !important;
+    }
+    .navbar-end {
+        padding-right: 5px !important;
+    }
+}
+
+.container {
+    background: var(--main-color-light);
+}
+
+.container button {
+    margin-top: 30px;
+}
+
+.field:not(:last-child) {
+    margin: 0 6rem 0.75rem 6rem;
+}
+
+/* =========================================================
+   1. General button styles (including spacing adjustments for scrollbars and surrounding elements)
+   ========================================================= */
+button:not(.paginate_button),
+.btn:not(.paginate_button),
+input[type="button"],
+input[type="submit"],
+.button {
+    background-color: #2b2b2b !important;
+    color: #ffffff !important;
+    border: 1px solid #3d3d3d !important;
+    border-radius: 8px !important;
+    padding: 8px 18px !important;
+    margin-top: 18px !important;
+    margin-bottom: 18px !important;
+    transition: all 0.2s ease-in-out !important;
+    cursor: pointer !important;
+    display: inline-block !important;
+}
+
+button:not(.paginate_button):hover,
+.btn:not(.paginate_button):hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+.button:hover {
+    background-color: #0066ff !important;
+    color: #ffffff !important;
+    border-color: #0066ff !important;
+}
+
+/* =========================================================
+   2. Search fields and input boxes (force gray background with white text for all inputs)
+   ========================================================= */
+input[type="text"],
+input[type="search"],
+input[type="number"],
+input[type="date"],
+select,
+.input {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+    border: 1px solid #3d3d3d !important;
+    border-radius: 8px !important;
+    padding: 6px 14px !important;
+    outline: none !important;
+}
+
+input[type="text"]:focus,
+input[type="search"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus {
+    border-color: #0066ff !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) !important;
+    cursor: pointer !important;
+}
+
+/* =========================================================
+   3. Table basic styles - header line wrapping and width optimization
+   ========================================================= */
+table, table.dataTable, .table, .tableStyles, .skills-table {
+    width: 100% !important;
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-collapse: collapse !important;
+    border-radius: 8px !important;
+    border: none !important;
+    margin-bottom: 15px !important;
+}
+
+html body table thead th,
+html body table.dataTable thead th,
+html body .table thead th {
+    background-color: #141414 !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid #333333 !important;
+    padding: 8px 28px 8px 10px !important;
+    text-align: center !important;
+    font-weight: bold !important;
+    vertical-align: middle !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    word-wrap: break-word !important;
+    max-width: 110px !important;
+}
+
+html body table tbody tr:nth-child(odd),
+html body table.dataTable tbody tr:nth-child(odd),
+html body table tbody tr.odd,
+html body table.dataTable tbody tr.odd {
+    background-color: #181818 !important;
+}
+
+html body table tbody tr:nth-child(even),
+html body table.dataTable tbody tr:nth-child(even),
+html body table tbody tr.even,
+html body table.dataTable tbody tr.even {
+    background-color: #222222 !important;
+}
+
+html body table tbody tr td,
+html body table.dataTable tbody tr td,
+html body table.dataTable tbody tr td.sorting_1,
+html body table tbody tr td * {
+    background-color: transparent !important;
+    color: #ffffff !important;
+    border-bottom: 1px solid #2d2d2d !important;
+    padding: 8px 10px !important;
+    vertical-align: middle !important;
+    opacity: 1 !important;
+}
+
+html body table tbody tr td:last-child,
+html body table.dataTable tbody tr td:last-child {
+    white-space: nowrap !important;
+}
+
+html body table tbody tr td button,
+html body table tbody tr td .btn,
+html body table.dataTable tbody tr td button,
+html body table.dataTable tbody tr td .btn {
+    margin: 0 2px !important;
+    padding: 4px 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+}
+
+html body table tbody tr:hover,
+html body table.dataTable tbody tr:hover {
+    background-color: #333333 !important;
+}
+
+/* =========================================================
+   4. Header sort button - fixed to top right corner
+   ========================================================= */
+table.dataTable thead .sorting,
+table.dataTable thead .sorting_asc,
+table.dataTable thead .sorting_desc {
+    background-image: none !important;
+    position: relative !important;
+    cursor: pointer !important;
+}
+
+table.dataTable thead .sorting::before,
+table.dataTable thead .sorting::after,
+table.dataTable thead .sorting_asc::before,
+table.dataTable thead .sorting_asc::after,
+table.dataTable thead .sorting_desc::before,
+table.dataTable thead .sorting_desc::after {
+    display: none !important;
+    content: "" !important;
+}
+
+table.dataTable thead th.sorting,
+table.dataTable thead th.sorting_asc,
+table.dataTable thead th.sorting_desc {
+    position: relative !important;
+}
+
+table.dataTable thead th.sorting::after,
+table.dataTable thead th.sorting_asc::after,
+table.dataTable thead th.sorting_desc::after {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: absolute !important;
+    right: 4px !important;
+    top: 6px !important;
+    transform: none !important;
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 5px !important;
+    font-size: 11px !important;
+    line-height: 1 !important;
+    transition: all 0.2s ease !important;
+
+    opacity: 0 !important;
+    visibility: hidden !important;
+    background-color: transparent !important;
+    border: 1px solid transparent !important;
+    color: transparent !important;
+    content: "⇅" !important;
+}
+
+table.dataTable thead th.sorting_asc::after {
+    content: "▲" !important;
+}
+table.dataTable thead th.sorting_desc::after {
+    content: "▼" !important;
+}
+
+table.dataTable thead th.sorting:hover::after,
+table.dataTable thead th.sorting_asc:hover::after,
+table.dataTable thead th.sorting_desc:hover::after {
+    opacity: 1 !important;
+    visibility: visible !important;
+    background-color: #1a1a1a !important;
+    border: 1px solid #666666 !important;
+    color: #a0a0a0 !important;
+}
+
+table.dataTable thead th.sorting:hover::after:hover,
+table.dataTable thead th.sorting_asc:hover::after:hover,
+table.dataTable thead th.sorting_desc:hover::after:hover {
+    background-color: #0066ff !important;
+    border: 1px solid #ffffff !important;
+    color: #ffffff !important;
+}
+
+/* =========================================================
+   5. 分頁按鈕樣式
+   ========================================================= */
+.dataTables_wrapper .dataTables_paginate,
+.dataTables_wrapper .dataTables_info,
+.pagination {
+    margin-top: 15px !important;
+    margin-bottom: 20px !important;
+    color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button,
+.pagination .page-item {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 3px !important;
+    box-shadow: none !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button a,
+.dataTables_wrapper .dataTables_paginate .paginate_button span,
+.pagination .page-item .page-link,
+.page-link {
+    background-color: #2b2b2b !important;
+    background: #2b2b2b !important;
+    color: #ffffff !important;
+    border: 1px solid #3d3d3d !important;
+    border-radius: 6px !important;
+    padding: 6px 14px !important;
+    display: inline-block !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover a,
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover span,
+.pagination .page-item .page-link:hover,
+.page-link:hover {
+    background-color: #0066ff !important;
+    background: #0066ff !important;
+    color: #ffffff !important;
+    border-color: #0066ff !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current a,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current span,
+.pagination .page-item.active .page-link {
+    background-color: #0066ff !important;
+    background: #0066ff !important;
+    color: #ffffff !important;
+    border-color: #0066ff !important;
+    font-weight: bold !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled a,
+.pagination .page-item.disabled .page-link {
+    background-color: #1a1a1a !important;
+    color: #666666 !important;
+    border-color: #2a2a2a !important;
+    cursor: not-allowed !important;
+}
+
+/* =========================================================
+   6. 讓水平滾動條緊貼表格下緣，分頁與按鈕維持原位
+   ========================================================= */
+.dataTables_wrapper {
+    position: relative;
+    overflow: visible !important;
+    clear: both;
+}
+
+.dataTables_wrapper .dataTables_scroll {
+    clear: both;
+    margin-bottom: 0 !important;
+}
+
+.dataTables_wrapper .dataTables_scrollBody {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+.dataTables_wrapper .dataTables_scrollHead {
+    overflow-x: scroll !important;
+}
+
+.dataTables_wrapper .dataTables_scrollHead::-webkit-scrollbar,
+.dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar {
+    height: 8px;
+}
+
+.dataTables_wrapper .dataTables_scrollHead::-webkit-scrollbar-track,
+.dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+.dataTables_wrapper .dataTables_scrollHead::-webkit-scrollbar-thumb,
+.dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+}
+
+.dataTables_wrapper .dataTables_scrollHead::-webkit-scrollbar-thumb:hover,
+.dataTables_wrapper .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate {
+    margin-top: 15px !important;
+}
+
+/* =========================================================
+   7. 修正水平滾動條緊貼表格下緣
+   ========================================================= */
+#theData {
+    margin-bottom: 0 !important;
+}

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: headerFragment">
+    <title id="pageTitle">Penalty List</title>
+</head>
+<body>
+<nav th:replace="fragments/navHeader :: navbar"></nav>
+<div class="container my-4">
+    <h2 class="mb-3 text-center title">Penalty Record List</h2>
+    <h2 class="mb-3 text-center error" th:if="${not #strings.isEmpty(messageError)}" th:text="${messageError}" >Message from controller</h2>
+    <h2 class="mb-3 text-center success" th:if="${not #strings.isEmpty(messageSuccess)}" th:text="${messageSuccess}" >Message success from controller</h2>
+
+    <!--    Adding for demo of using a CodeValue table for dynamic lists.-->
+    <label for="penaltySelect">Choose a penalty type (for demo of CodeValue only):</label>
+    <select id="penaltySelect" name="selectedPenalty">
+        <option value="" disabled selected hidden>-- Select --</option>
+        <option th:each="codeValue : ${session.penaltyTypes}" th:value="${codeValue.id.codeValueSequence}" th:text="${codeValue.englishDescription}"></option>
+    </select>
+
+    <!--    Adding ability to search by team or referee name-->
+    <form th:object="${penalty}" th:action="@{/tacklepenalty/search}"  method="post">
+        <label for="name" th:text="#{label.search.name}">Team or Referee Name</label>
+        <input type="text" id="name" th:field="${penalty.searchName}"/>
+        <button type="submit">Search</button>
+    </form>
+
+    <table id="theData" class="table table-striped table-hover align-middle" style="width: 100%;">
+        <thead class="table-dark text-center">
+        <tr>
+            <th>ID</th>
+            <th>Date</th>
+            <th>Home Team</th>
+            <th>Away Team</th>
+            <th>Penalty</th>
+            <th>Quarter</th>
+            <th>Penalized Team</th>
+            <th>Offending Player</th>
+            <th>Age Division</th>
+            <th>Referee</th>
+            <th>Impact Score</th>
+            <th>Options</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="current : ${penalties}">
+            <td th:text="${current.id}"></td>
+            <td th:text="${current.date}"></td>
+            <td th:text="${current.homeTeam}"></td>
+            <td th:text="${current.awayTeam}"></td>
+            <td th:text="${current.penalty}"></td>
+            <td th:text="${current.quarter}"></td>
+            <td th:text="${current.penalizedTeam}"></td>
+            <td th:text="${current.offendingPlayer}"></td>
+            <td th:text="${current.ageDivision}"></td>
+            <td th:text="${current.referee}"></td>
+            <td th:text="${current.impactScore}"></td>
+
+            <td class="text-center">
+                <div class="btn-group" role="group">
+                    <a th:href="@{/tacklepenalty/edit/{id}(id=${current.id})}"
+                       class="btn btn-sm btn-outline-primary" title="Edit">
+                        <i class="accent fas fa-edit"></i>
+                    </a>
+                    <a th:href="@{/tacklepenalty/delete/{id}(id=${current.id})}"
+                       class="btn btn-sm btn-outline-danger" title="Delete">
+                        <i class="accent fas fa-trash"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+
+        <!-- Message when no data -->
+        <tr th:if="${#lists.isEmpty(penalties)}">
+            <td colspan="12" class="text-center text-muted py-4">
+                No penalties found.
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Optional "Add new" button & Pagination component area -->
+    <div class="text-center mt-3">
+        <a th:href="@{/tacklepenalty/add}" href="/tacklepenalty/add" class="accent accent-background btn btn-success">
+            <i class="fas fa-plus"></i> Add New Penalty
+        </a>
+    </div>
+</div>
+<footer th:replace="fragments/footer :: footer"></footer>
+</body>
+</html>
