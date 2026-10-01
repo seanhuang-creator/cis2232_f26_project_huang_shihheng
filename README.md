@@ -1,56 +1,240 @@
-# PEIFOA 2026 Tackle Penalty Tracker
+# PEIFOA Tackle Penalty Tracker
 
-Sample cis2232 / cis2250 project
-Development Team
+**Course:** CIS 2232 - Object-Orient Programming I
+**Assignment:** Assignment 2 - Test Driven Development
 
-* **Business Client:** Jake Henderson
-* **Lead Developer:** Sean
-* **Project Manager / QA:** Jonathan
+## Development Team
+
+| Role | Name |
+|------|------|
+| Business Client | Jake Henderson |
+| Lead Developer | Sean Huang |
+| Project Manager / QA | Jonathan |
 
 ---
 
 ## Description
 
-The Prince Edward Island Football Officials Association (PEIFOA) oversees officiating for amateur tackle football across the province. Every week, officials refereeing these island matchups submit paper or digital penalty sheets documenting every flag thrown during a game. Currently, these sheets are compiled and emailed to the association at the end of each week.
+The Prince Edward Island Football Officials Association (PEIFOA) oversees officiating for amateur tackle football across the province. Every week, officials refereeing these island matchups submit penalty sheets documenting every flag thrown during a game.
 
-While this data is invaluable, managing it through static emails makes it incredibly difficult to analyze trends, track team discipline, or evaluate officiating consistency. To modernize this process, this project introduces a centralized Penalty Tracker Application designed to streamline data entry and transform raw game summaries into actionable insights.
+While this data is invaluable, managing it through static emails makes it difficult to analyze trends, track team discipline, or evaluate officiating consistency. This project introduces a **centralized Penalty Tracker Application** designed to streamline data entry and transform raw game summaries into actionable insights.
 
-Whenever a user inputs data from a weekly penalty sheet, the application captures vital context, including the game’s date, participating teams, age division, the specific infraction, and the official who made the call. A key innovation of this tracker is the automated Impact Score calculated field. By evaluating the severity of a penalty against the quarter in which it occurred, the app mathematically weighs each infraction. A minor offside in the first quarter yields a low score, whereas a safety-related personal foul in the fourth quarter generates a high impact rating.
+### Key Features
 
-Ultimately, this project replaces a cumbersome email trail with a dynamic database. It provides PEIFOA with a clear, data-driven window into PEI football, highlighting high-leverage game moments, tracking referee workload, and identifying safety trends to improve the game for players and officials alike.
-
----
-
-## Color
-
-* **Main Color:** Black
-* **Secondary Color:** White / Gray (Standard UI Contrast)
+- **Automated Data Entry:** Captures vital game context including date, teams, age division, infraction type, and the official who made the call
+- **Impact Score Calculation:** Automatically calculates a weighted impact score based on penalty severity and game quarter
+- **JSON Storage:** Persist penalty records to local JSON files for easy data management
+- **History Integration:** Loads and displays historical penalty data from real PEIFOA game records
 
 ---
 
-## Required Fields
+## Impact Score Calculation Formula
 
-| Field Name | Data Type | Description |
-| --- | --- | --- |
-| `id` | `int` | Unique identifier for database table |
-| `homeTeam` | `String` | Name of the home team for the game |
-| `awayTeam` | `String` | Name of the visiting team for the game |
-| `date` | `String` | Date of game |
+The application calculates an **Impact Score** for each penalty based on two factors:
+
+### 1. Penalty Severity (Base Score)
+
+| Infraction Category | Base Score | Example Penalties |
+|---------------------|------------|-------------------|
+| Minor | 3.0 | Offside, Procedure, Mouth Guard Warning, No Yards, Time Count Violation, Illegal Formation, Illegal Equipment |
+| Technical / Major | 8.0 | Holding, Pass Interference, Illegal Block in the Back, Kick Out of Bounds, Intentional Grounding, Illegal Use of Hands, Tandem Buck Block |
+| Severe / Safety | 15.0 | Unnecessary Roughness, Objectionable Conduct, Personal Foul |
+| Default | 5.0 | Any unrecognized penalty type |
+
+### 2. Quarter Multiplier
+
+The later in the game a penalty occurs, the higher its potential impact on the outcome:
+
+| Quarter | Multiplier |
+|---------|------------|
+| Q1 | 1.0x |
+| Q2 | 1.25x |
+| Q3 | 1.5x |
+| Q4 | 2.0x |
+
+### Formula
+
+```
+Impact Score = Base Score × Quarter Multiplier
+```
+
+### Examples
+
+| Penalty | Quarter | Calculation | Impact Score |
+|---------|---------|-------------|--------------|
+| Offside | Q1 | 3.0 × 1.0 | 3.0 |
+| Holding | Q2 | 8.0 × 1.25 | 10.0 |
+| Pass Interference | Q3 | 8.0 × 1.5 | 12.0 |
+| Personal Foul | Q4 | 15.0 × 2.0 | 30.0 |
+
+---
+
+## Project Structure
+
+```
+cis2232_assignment2_penalty_tracker_huang_shihheng/
+├── src/
+│   ├── main/
+│   │   ├── java/ca/hccis/penaltytracker/
+│   │   │   ├── Controller.java          # Main entry point, menu navigation
+│   │   │   ├── bo/
+│   │   │   │   └── PenaltyTrackerBO.java # Business logic, calculate() method
+│   │   │   ├── entity/
+│   │   │   │   └── PenaltyTracker.java   # Data model
+│   │   │   └── util/
+│   │   │       └── CisUtility.java       # Utility helper methods
+│   │   └── resources/
+│   │       └── penaltiesHistory.json     # Historical penalty data
+│   └── test/
+│       └── java/ca/hccis/penaltytracker/
+│           └── bo/
+│               └── PenaltyTrackerBOTest.java # JUnit test suite
+└── pom.xml                               # Maven build configuration
+```
+
+---
+
+## Requirements Implemented
+
+### Requirement 1: Test Driven Development (TDD)
+
+- Developed using the **Test Driven Development** approach (Red-Green-Refactor)
+- Created **3 JUnit tests** for the `calculate()` method in `PenaltyTrackerBO`
+- Each test includes Javadoc notes indicating TDD methodology
+- Utilizes multiple assertion methods: `assertEquals`, `assertTrue`, `assertNotNull`
+
+### Requirement 2: AI for Test Generation
+
+- AI-generated test suite provides comprehensive unit testing coverage
+- Tests include edge cases: null handling, unknown penalties, invalid quarters
+- Data-driven integration tests using real `penaltiesHistory.json` dataset
+
+---
+
+## How to Run
+
+### Prerequisites
+
+- Java Development Kit (JDK) 8 or higher
+- Maven 3.6+
+
+### Build and Run
+
+```bash
+# Compile the project
+mvn clean compile
+
+# Run the application
+mvn exec:java -Dexec.mainClass="ca.hccis.penaltytracker.Controller"
+
+# Run tests
+mvn test
+```
+
+### Usage
+
+Upon running, the application presents a simple menu:
+
+```
+A) Add
+V) View
+X) eXit
+Option:
+```
+
+- **A)** Add a new penalty record (auto-assigns ID, calculates Impact Score)
+- **V)** View all penalty records (historical + user-added)
+- **X)** Exit the application
+
+---
+
+## Unit Test Summary
+
+### TDD Tests (Requirement 1)
+
+| Test Name | Description | Expected Result |
+|-----------|-------------|-----------------|
+| `testCalculateMinorPenaltyInQ1` | Offside penalty in Q1 | 3.0 × 1.0 = 3.0 |
+| `testCalculateSeverePenaltyInQ4` | Personal Foul in Q4 | 15.0 × 2.0 = 30.0 |
+| `testCalculateUpdatesEntityImpactScore` | Holding in Q2 | 8.0 × 1.25 = 10.0 |
+
+### AI-Generated Tests (Requirement 2)
+
+| Test Name | Description | Expected Result |
+|-----------|-------------|-----------------|
+| `testCalculateNullEntity` | Null entity handling | Returns 0.0 |
+| `testCalculateUnknownPenalty` | Unrecognized penalty type | Default 5.0 × multiplier |
+| `testCalculateInvalidQuarter` | Invalid quarter value | Defaults to 1.0x multiplier |
+
+### Data Integration Test
+
+| Test Name | Description |
+|-----------|-------------|
+| `testCalculateAllHistoryRecordsFromJson` | Validates calculation against all 78 real PEIFOA penalty records |
+
+---
+
+## Data Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `int` | Unique identifier (auto-assigned) |
+| `homeTeam` | `String` | Name of the home team |
+| `awayTeam` | `String` | Name of the away team |
+| `date` | `String` | Game date (yyyy-MM-dd) |
 | `penalty` | `String` | Infraction type |
-| `quarter` | `int` | Quarter infraction occurred |
-| `penalizedTeam` | `String` | Name of offending team |
-| `ageDivision` | `String` | Age division of game |
-| `referee` | `String` | Name of official who flagged the infraction |
-| `impactScore` | `Double` | Calculated impact penalty had |
+| `quarter` | `int` | Quarter (1-4) |
+| `penalizedTeam` | `String` | Team that committed the penalty |
+| `ageDivision` | `String` | Age division (e.g., AFL, U18, U15) |
+| `referee` | `String` | Official who made the call |
+| `impactScore` | `double` | Calculated impact score |
 
 ---
 
-## Calculation
+## Technologies Used
 
-The calculation / processing needed when the user enters a new record involves determining the **Impact Score**. Certain penalties carry a higher base impact on the game, and the later the quarter in which the penalty occurs, the higher the weight it carries. The application uses the penalty type and the quarter to calculate and assign an overall impact score to that specific infraction before writing the record to the database.
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Java | 8+ | Programming language |
+| Maven | 3.6+ | Build automation |
+| JUnit 5 | 5.10.0 | Unit testing framework |
+| Gson | 2.8.5 | JSON serialization/deserialization |
 
 ---
 
-## Report Details
+## Programming Standards
 
-To be determined in future sprint
+This project follows strict Java programming standards:
+
+- **Naming Conventions:** CamelCase for classes, camelCase for methods/variables
+- **Commenting:** Comprehensive Javadoc for all public classes and methods
+- **Formatting:** Consistent indentation (4 spaces), proper brace placement
+- **Encapsulation:** Private fields with public getters/setters
+- **Error Handling:** Graceful handling of null values and invalid inputs
+
+---
+
+## Future Enhancements
+
+- [ ] GUI interface (JavaFX)
+- [ ] Database integration (SQLite/MySQL)
+- [ ] Advanced analytics and reporting
+- [ ] Export to CSV/PDF
+- [ ] Team discipline leaderboard
+- [ ] Referee workload dashboard
+
+---
+
+## License
+
+Sample project for CIS 2232 educational purposes.
+
+---
+
+## Acknowledgments
+
+- **Course Instructor:** CIS 2232 Teaching Team
+- **Business Client:** Jake Henderson
+- **Official Dataset:** Prince Edward Island Football Officials Association (PEIFOA)
+
+---
