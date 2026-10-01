@@ -34,7 +34,7 @@ public class PenaltyTrackerBOTest {
 
     /**
      * TDD Test 1: Verify calculation for a minor penalty (Offside) in Quarter 1.
-     * Expected: Base 1.0 * Quarter Multiplier 1.0 = 1.0
+     * Expected: Base 3.0 * Quarter Multiplier 1.0 = 3.0
      * Built following the TDD approach (Red-Green-Refactor).
      */
     @Test
@@ -47,12 +47,12 @@ public class PenaltyTrackerBOTest {
         double actualScore = bo.calculate(entity);
 
         // Assert 1: assertEquals
-        assertEquals(1.0, actualScore, 0.001, "Offside in Q1 should calculate an impact score of 1.0");
+        assertEquals(3.0, actualScore, 0.001, "Offside in Q1 should calculate an impact score of 3.0");
     }
 
     /**
      * TDD Test 2: Verify high severity penalty (Personal Foul) in Quarter 4.
-     * Expected: Base 5.0 * Quarter Multiplier 2.0 = 10.0
+     * Expected: Base 15.0 * Quarter Multiplier 2.0 = 30.0
      * Built following the TDD approach (Red-Green-Refactor).
      */
     @Test
@@ -65,12 +65,13 @@ public class PenaltyTrackerBOTest {
         double actualScore = bo.calculate(entity);
 
         // Assert 2: assertTrue
-        assertTrue(actualScore > 5.0, "Personal Foul in Q4 should yield a high impact score exceeding 5.0");
-        assertEquals(10.0, actualScore, 0.001, "Personal Foul in Q4 should exactly equal 10.0");
+        assertTrue(actualScore > 15.0, "Personal Foul in Q4 should yield a high impact score exceeding 15.0");
+        assertEquals(30.0, actualScore, 0.001, "Personal Foul in Q4 should exactly equal 30.0");
     }
 
     /**
      * TDD Test 3: Verify entity impactScore field is correctly updated upon calculation.
+     * Expected: Holding (Technical/Major 8.0) * Q2 (1.25) = 10.0
      * Built following the TDD approach (Red-Green-Refactor).
      */
     @Test
@@ -80,12 +81,12 @@ public class PenaltyTrackerBOTest {
         entity.setPenalty("Holding");
         entity.setQuarter(2);
 
-        // Holding (SEVERITY_MODERATE 2.0) * Q2 (1.25) = 2.5
+        // Holding (SEVERITY_TECHNICAL_MAJOR 8.0) * Q2 (1.25) = 10.0
         bo.calculate(entity);
 
         // Assert 3: assertNotNull & assertEquals
         assertNotNull(entity.getImpactScore(), "Impact score in entity should not be null after calculation");
-        assertEquals(2.5, entity.getImpactScore(), 0.001, "Entity impact score should be updated to 2.5");
+        assertEquals(10.0, entity.getImpactScore(), 0.001, "Entity impact score should be updated to 10.0");
     }
 
     // --- AI Generated Test Suite (Requirement 2) ---
@@ -104,9 +105,9 @@ public class PenaltyTrackerBOTest {
         entity.setPenalty("Unsportsmanlike Conduct");
         entity.setQuarter(3);
 
-        // Default SEVERITY_DEFAULT 2.0 * Q3 (1.5) = 3.0
+        // Default SEVERITY_DEFAULT 5.0 * Q3 (1.5) = 7.5
         double actual = bo.calculate(entity);
-        assertEquals(3.0, actual, 0.001, "Default penalty in Q3 should calculate to 3.0");
+        assertEquals(7.5, actual, 0.001, "Default penalty in Q3 should calculate to 7.5");
     }
 
     @Test
@@ -116,9 +117,9 @@ public class PenaltyTrackerBOTest {
         entity.setPenalty("Offside");
         entity.setQuarter(99); // Invalid quarter
 
-        // Offside SEVERITY_MINOR 1.0 * Default Multiplier 1.0 = 1.0
+        // Offside SEVERITY_MINOR 3.0 * Default Multiplier 1.0 = 3.0
         double actual = bo.calculate(entity);
-        assertEquals(1.0, actual, 0.001, "Invalid quarter should default to 1.0x multiplier");
+        assertEquals(3.0, actual, 0.001, "Invalid quarter should default to 1.0x multiplier");
     }
 
     // --- Data-Driven Integration Test using Real History Dataset ---
@@ -151,5 +152,52 @@ public class PenaltyTrackerBOTest {
 
         System.out.println("Data Integration Test Passed: Successfully calculated impact scores for "
                 + historyList.size() + " real PEIFOA penalty records.");
+    }
+
+    // --- Additional Edge Case Tests ---
+
+    /**
+     * Test all quarter multipliers produce correct results.
+     */
+    @Test
+    @DisplayName("Edge Case Test: All Quarter Multipliers")
+    public void testAllQuarterMultipliers() {
+        String[] penaltyTypes = {"Offside", "Holding", "Personal Foul"};
+        double[] expectedScores = {3.0, 8.0, 15.0}; // Base scores for Q1 (1.0x)
+
+        for (int i = 0; i < penaltyTypes.length; i++) {
+            PenaltyTracker entity = new PenaltyTracker();
+            entity.setPenalty(penaltyTypes[i]);
+            entity.setQuarter(1);
+            assertEquals(expectedScores[i], bo.calculate(entity), 0.001);
+
+            entity.setQuarter(2);
+            assertEquals(expectedScores[i] * 1.25, bo.calculate(entity), 0.001);
+
+            entity.setQuarter(3);
+            assertEquals(expectedScores[i] * 1.5, bo.calculate(entity), 0.001);
+
+            entity.setQuarter(4);
+            assertEquals(expectedScores[i] * 2.0, bo.calculate(entity), 0.001);
+        }
+    }
+
+    /**
+     * Test default severity for unrecognized penalty types.
+     */
+    @Test
+    @DisplayName("Edge Case Test: Default Severity Level")
+    public void testDefaultSeverityForUnknownPenalty() {
+        String[] unknownPenalties = {"Unknown Foul", "Random Penalty", "Test Infraction"};
+
+        for (String penalty : unknownPenalties) {
+            PenaltyTracker entity = new PenaltyTracker();
+            entity.setPenalty(penalty);
+            entity.setQuarter(1);
+
+            // Default severity is 5.0, Q1 multiplier is 1.0
+            assertEquals(5.0, bo.calculate(entity), 0.001,
+                "Unknown penalty '" + penalty + "' should use default severity");
+        }
     }
 }

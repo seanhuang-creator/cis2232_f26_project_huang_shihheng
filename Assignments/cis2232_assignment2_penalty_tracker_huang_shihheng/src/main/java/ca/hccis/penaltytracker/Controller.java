@@ -32,7 +32,8 @@ public class Controller {
             + "X) eXit" + System.lineSeparator()
             + "Option: ";
 
-    public static final String PATH = "d:\\cis2232\\";
+    // Use relative path for better portability
+    public static final String PATH = "./data/";
     public static final String FILE_NAME = "data_huang_shihheng.json"; // JSON file with my name
 
     public static void main(String[] args) {
@@ -49,7 +50,8 @@ public class Controller {
             try {
                 Files.createFile(filePath);
             } catch (IOException e) {
-                System.out.println("Error creating data file.");
+                System.out.println("Error creating data file: " + e.getMessage());
+                e.printStackTrace();
             }
         }
 
@@ -148,6 +150,7 @@ public class Controller {
             System.out.println("Record saved successfully! Assigned ID: " + nextId + " | Impact Score: " + penaltyTracker.getImpactScore());
         } catch (IOException e) {
             System.out.println("Error writing to file: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -194,6 +197,7 @@ public class Controller {
             }
         } catch (IOException e) {
             System.out.println("Error reading user data file: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

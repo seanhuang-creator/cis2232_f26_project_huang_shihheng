@@ -1,0 +1,5 @@
+# Created at 2026-10-01T12:14:57.288
+Boot Manifest-JAR contains absolute paths in classpath 'D:\GitHub\cis2232_f26_project_huang_shihheng\Assignments\cis2232_assignment2_penalty_tracker_huang_shihheng\target\test-classes'
+Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+'other' has different root
+

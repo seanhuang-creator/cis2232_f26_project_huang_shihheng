@@ -172,6 +172,30 @@ Option:
 |-----------|-------------|
 | `testCalculateAllHistoryRecordsFromJson` | Validates calculation against all 78 real PEIFOA penalty records |
 
+### Entity Tests (Enhanced Coverage)
+
+| Test Name | Description |
+|-----------|-------------|
+| `testGettersAndSetters` | Validates all getter/setter methods |
+| `testToJson` | Validates JSON serialization |
+| `testToString` | Validates string representation |
+| `testDefaultConstructor` | Validates default initialization |
+
+### Controller Tests (Enhanced Coverage)
+
+| Test Name | Description |
+|-----------|-------------|
+| `testMenuConstant` | Validates menu options (A/V/X) |
+| `testDataPathConfiguration` | Validates relative path configuration |
+| `testFileNameConfiguration` | Validates file naming convention |
+
+### Additional Edge Case Tests
+
+| Test Name | Description |
+|-----------|-------------|
+| `testAllQuarterMultipliers` | Validates all quarter multipliers (Q1-Q4) |
+| `testDefaultSeverityForUnknownPenalty` | Validates default severity for unrecognized penalties |
+
 ---
 
 ## Data Fields
@@ -185,6 +209,7 @@ Option:
 | `penalty` | `String` | Infraction type |
 | `quarter` | `int` | Quarter (1-4) |
 | `penalizedTeam` | `String` | Team that committed the penalty |
+| `offendingPlayer` | `int` | Player number who committed the penalty |
 | `ageDivision` | `String` | Age division (e.g., AFL, U18, U15) |
 | `referee` | `String` | Official who made the call |
 | `impactScore` | `double` | Calculated impact score |

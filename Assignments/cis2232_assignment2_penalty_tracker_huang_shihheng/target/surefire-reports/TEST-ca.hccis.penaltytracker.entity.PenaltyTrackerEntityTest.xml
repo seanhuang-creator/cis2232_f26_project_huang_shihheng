@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="ca.hccis.penaltytracker.entity.PenaltyTrackerEntityTest" time="0.009" tests="4" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="25"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+    <property name="sun.jnu.encoding" value="MS950"/>
+    <property name="java.class.path" value="D:\GitHub\cis2232_f26_project_huang_shihheng\Assignments\cis2232_assignment2_penalty_tracker_huang_shihheng\target\test-classes;D:\GitHub\cis2232_f26_project_huang_shihheng\Assignments\cis2232_assignment2_penalty_tracker_huang_shihheng\target\classes;C:\Users\user\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\user\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.0\junit-jupiter-5.10.0.jar;C:\Users\user\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.0\junit-jupiter-api-5.10.0.jar;C:\Users\user\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\user\.m2\repository\org\junit\platform\junit-platform-commons\1.10.0\junit-platform-commons-1.10.0.jar;C:\Users\user\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\user\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.0\junit-jupiter-params-5.10.0.jar;C:\Users\user\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.0\junit-jupiter-engine-5.10.0.jar;C:\Users\user\.m2\repository\org\junit\platform\junit-platform-engine\1.10.0\junit-platform-engine-1.10.0.jar;"/>
+    <property name="java.vm.vendor" value="JetBrains s.r.o."/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="user.variant" value=""/>
+    <property name="java.vendor.url" value="https://www.jetbrains.com/"/>
+    <property name="user.timezone" value="America/Halifax"/>
+    <property name="user.country.format" value="TW"/>
+    <property name="os.name" value="Windows 11"/>
+    <property name="java.vm.specification.version" value="25"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="GB"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2026.1\jbr\bin"/>
+    <property name="sun.java.command" value="C:\Users\user\AppData\Local\Temp\surefire6410024879550268035\surefirebooter-20261001121457228_3.jar C:\Users\user\AppData\Local\Temp\surefire6410024879550268035 2026-10-01T12-14-57_103-jvmRun1 surefire-20261001121457228_1tmp surefire_0-20261001121457228_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="D:\GitHub\cis2232_f26_project_huang_shihheng\Assignments\cis2232_assignment2_penalty_tracker_huang_shihheng\target\test-classes;D:\GitHub\cis2232_f26_project_huang_shihheng\Assignments\cis2232_assignment2_penalty_tracker_huang_shihheng\target\classes;C:\Users\user\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\user\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.0\junit-jupiter-5.10.0.jar;C:\Users\user\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.0\junit-jupiter-api-5.10.0.jar;C:\Users\user\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\user\.m2\repository\org\junit\platform\junit-platform-commons\1.10.0\junit-platform-commons-1.10.0.jar;C:\Users\user\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\user\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.0\junit-jupiter-params-5.10.0.jar;C:\Users\user\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.0\junit-jupiter-engine-5.10.0.jar;C:\Users\user\.m2\repository\org\junit\platform\junit-platform-engine\1.10.0\junit-platform-engine-1.10.0.jar;"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="C:\Users\user"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-01-20"/>
+    <property name="java.home" value="C:\Program Files\JetBrains\IntelliJ IDEA 2026.1\jbr"/>
+    <property name="file.separator" value="\"/>
+    <property name="basedir" value="D:\GitHub\cis2232_f26_project_huang_shihheng\Assignments\cis2232_assignment2_penalty_tracker_huang_shihheng"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="intellij.os.virtualization" value="none"/>
+    <property name="jbr.virtualization.information" value="Hyper-V role"/>
+    <property name="surefire.real.class.path" value="C:\Users\user\AppData\Local\Temp\surefire6410024879550268035\surefirebooter-20261001121457228_3.jar"/>
+    <property name="user.script" value=""/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="25.0.2+1-b329.72"/>
+    <property name="user.name" value="user"/>
+    <property name="stdout.encoding" value="MS950"/>
+    <property name="path.separator" value=";"/>
+    <property name="os.version" value="10.0"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="JBR-25.0.2+1-329.72-jcef"/>
+    <property name="localRepository" value="C:\Users\user\.m2\repository"/>
+    <property name="java.vendor.url.bug" value="https://youtrack.jetbrains.com/issues/JBR"/>
+    <property name="java.io.tmpdir" value="C:\Users\user\AppData\Local\Temp\"/>
+    <property name="java.version" value="25.0.2"/>
+    <property name="user.dir" value="D:\GitHub\cis2232_f26_project_huang_shihheng\Assignments\cis2232_assignment2_penalty_tracker_huang_shihheng"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.language.format" value="zh"/>
+    <property name="sun.os.patch.level" value=""/>
+    <property name="native.encoding" value="MS950"/>
+    <property name="java.library.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2026.1\jbr\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Python313\Scripts\;C:\Python313\;C:\Program Files (x86)\VMware\VMware Workstation\bin\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\ProgramData\chocolatey\bin;C:\Program Files\Git\cmd;C:\Program Files\PuTTY\;C:\Program Files\nodejs\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\IncrediBuild;C:\Program Files (x86)\Windows Kits\10\Windows Performance Toolkit\;C:\Program Files\JetBrains\IntelliJ IDEA 2026.1\plugins\maven\lib\maven3\bin;C:\Users\user\AppData\Local\Microsoft\WindowsApps;C:\Program Files\JetBrains\IntelliJ IDEA 2026.1\bin;C:\Users\user\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\user\AppData\Roaming\npm;C:\Program Files\JetBrains\WebStorm 2026.1\bin;C:\Program Files\JetBrains\PhpStorm 2026.2.2\bin;C:\Users\user\.dotnet\tools;C:\Users\user\AppData\Local\GitHubDesktop\bin;C:\Users\user\AppData\Local\JetBrains\Toolbox\scripts;;."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="MS950"/>
+    <property name="java.vendor" value="JetBrains s.r.o."/>
+    <property name="java.vm.version" value="25.0.2+1-b329.72"/>
+    <property name="stdin.encoding" value="MS950"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="69.0"/>
+  </properties>
+  <testcase name="testGettersAndSetters" classname="ca.hccis.penaltytracker.entity.PenaltyTrackerEntityTest" time="0.001"/>
+  <testcase name="testToString" classname="ca.hccis.penaltytracker.entity.PenaltyTrackerEntityTest" time="0.0"/>
+  <testcase name="testToJson" classname="ca.hccis.penaltytracker.entity.PenaltyTrackerEntityTest" time="0.007"/>
+  <testcase name="testDefaultConstructor" classname="ca.hccis.penaltytracker.entity.PenaltyTrackerEntityTest" time="0.0"/>
+</testsuite>

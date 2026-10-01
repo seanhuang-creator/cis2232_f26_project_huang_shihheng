@@ -32,36 +32,76 @@ public class CisUtility {
     }
 
     /**
-     * Get input from the user using the console
+     * Get input from the user using the console.
      *
-     * @param prompt Prompt for the user
+     * @param prompt Prompt message for the user
      * @return String entered by the user
      * @since 20211020
      * @author BJM
      */
     public static String getInputString(String prompt) {
 
-        System.out.println(prompt + " -->");
+        System.out.print(prompt + " --> ");
         String output = input.nextLine();
         return output;
     }
 
     /**
-     * Get input from the user using the console
+     * Get input from the user using the console with validation for min/max length.
      *
-     * @param prompt Prompt for the user
-     * @return String entered by the user
-     * @since 20211020
-     * @author BJM
+     * @param prompt Prompt message for the user
+     * @param minLength Minimum acceptable length for input
+     * @param maxLength Maximum acceptable length for input
+     * @return The validated String entered by the user
+     * @since 2026-09
+     * @author seanhuang
      */
-    public static String getInputString(String prompt, int minLength, int maxLength) {
+    public static String getInputStringWithValidation(String prompt, int minLength, int maxLength) {
+        String output = "";
+        boolean valid = false;
 
-        System.out.println(prompt+ " ("+minLength+" to "+ maxLength+" characters" + " -->");
-        String output = input.nextLine();
-
-        while(output.length() < minLength || output.length() > maxLength) {
-            System.out.println(prompt + " -->");
+        while (!valid) {
+            System.out.print(prompt + " (" + minLength + "-" + maxLength + " chars): --> ");
             output = input.nextLine();
+
+            if (output.length() >= minLength && output.length() <= maxLength) {
+                valid = true;
+            } else {
+                System.out.println("Invalid input. Please enter between " + minLength + " and " + maxLength + " characters.");
+            }
+        }
+
+        return output;
+    }
+
+    /**
+     * Get input int from the user with validation for min/max range.
+     *
+     * @param prompt Prompt message for the user
+     * @param minValue Minimum acceptable value for input
+     * @param maxValue Maximum acceptable value for input
+     * @return The validated int entered by the user
+     * @since 2026-09
+     * @author seanhuang
+     */
+    public static int getInputIntWithValidation(String prompt, int minValue, int maxValue) {
+        int output = 0;
+        boolean valid = false;
+
+        while (!valid) {
+            try {
+                System.out.print(prompt + " (" + minValue + "-" + maxValue + "): --> ");
+                String inputString = input.nextLine();
+                output = Integer.parseInt(inputString);
+
+                if (output >= minValue && output <= maxValue) {
+                    valid = true;
+                } else {
+                    System.out.println("Invalid input. Please enter a value between " + minValue + " and " + maxValue + ".");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid integer.");
+            }
         }
 
         return output;
@@ -69,9 +109,9 @@ public class CisUtility {
 
 
     /**
-     * Get input from the user using the console
+     * Get input double from the user using the console.
      *
-     * @param prompt Prompt for the user
+     * @param prompt Prompt message for the user
      * @return The double entered by the user
      * @since 20211020
      * @author BJM
@@ -84,10 +124,10 @@ public class CisUtility {
     }
 
     /**
-     * Get input from the user using the console
+     * Get input int from the user using the console.
      *
-     * @param prompt Prompt for the user
-     * @return The double entered by the user
+     * @param prompt Prompt message for the user
+     * @return The int entered by the user
      * @since 20211020
      * @author BJM
      */
@@ -98,72 +138,75 @@ public class CisUtility {
         return output;
     }
 
-     /**
-     * Get input boolean from the user using the console
+    /**
+     * Get input boolean from the user using the console.
      *
-     * @param prompt Prompt for the user
-     * @return boolean as specified by user input
+     * @param prompt Prompt message for the user
+     * @return boolean value as specified by user input (y/n)
      * @since 20211108
      * @author BJM
      */
     public static boolean getInputBoolean(String prompt) {
 
-        String inputString = getInputString(prompt+" (y/n)");
-        if(inputString.equalsIgnoreCase("y")){
+        String inputString = getInputString(prompt + " (y/n)");
+        if (inputString.equalsIgnoreCase("y")) {
             return true;
-        }else{
+        } else {
             return false;
         }
-        
+
     }
 
-     /**
-     * Get input boolean from the user using the console
+    /**
+     * Get input boolean from the user using the console with custom options.
      *
-     * @param prompt Prompt for the user
-     * @return boolean as specified by user input
+     * @param prompt Prompt message for the user
+     * @param affirmative The string value representing "yes"
+     * @param negative The string value representing "no"
+     * @return boolean value as specified by user input
      * @since 20211108
      * @author BJM
      */
     public static boolean getInputBoolean(String prompt, String affirmative, String negative) {
 
-        String inputString = getInputString(prompt+" ("+affirmative+"/"+negative+")");
-        if(inputString.equalsIgnoreCase(affirmative)){
+        String inputString = getInputString(prompt + " (" + affirmative + "/" + negative + ")");
+        if (inputString.equalsIgnoreCase(affirmative)) {
             return true;
-        }else{
+        } else {
             return false;
         }
-        
+
     }
 
 
     
     /**
-     * Provide today's date in the specified format
+     * Provide today's date in the specified format.
      *
-     * @param format Date format desired
+     * @param format Date format pattern (e.g., "yyyy-MM-dd")
      * @return Today's date in specified format
      * @since 20211021
      * @author BJM
      */
     public static String getTodayString(String format) {
-        //https://www.javatpoint.com/java-get-current-date
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern(format);
         LocalDateTime now = LocalDateTime.now();
         return dtf.format(now);
-
     }
 
-        /**
-     * Get a random number between min and max
+    /**
+     * Get a random number between min and max (inclusive).
+     *
+     * @param min Minimum value for random number
+     * @param max Maximum value for random number
+     * @return Random integer between min and max
      * @since 20211109
      * @author BJM
      */
-    public static int getRandom(int min, int max){
+    public static int getRandom(int min, int max) {
         Random rand = new Random();
-        int theRandomNumber = rand.nextInt((max - min) + 1) + min;
-        return theRandomNumber;
+        return rand.nextInt((max - min) + 1) + min;
     }
     
     
