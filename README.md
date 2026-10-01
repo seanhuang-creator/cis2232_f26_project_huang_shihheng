@@ -36,10 +36,11 @@ The application calculates an **Impact Score** for each penalty based on two fac
 
 | Infraction Category | Base Score | Example Penalties |
 |---------------------|------------|-------------------|
-| Minor | 3.0 | Offside, Procedure, Mouth Guard Warning, No Yards, Time Count Violation, Illegal Formation, Illegal Equipment |
-| Technical / Major | 8.0 | Holding, Pass Interference, Illegal Block in the Back, Kick Out of Bounds, Intentional Grounding, Illegal Use of Hands, Tandem Buck Block |
-| Severe / Safety | 15.0 | Unnecessary Roughness, Objectionable Conduct, Personal Foul |
-| Default | 5.0 | Any unrecognized penalty type |
+| Mouth Guard Warning | 0.5 | Mouth Guard Warning, Equipment Warning |
+| Minor | 1.0 | Offside, Procedure, No Yards, Time Count Violation, Illegal Formation, Illegal Equipment, Illegal Kick Out of Bounds, Intentional Grounding |
+| Moderate | 2.0 | Holding, Illegal Use of Hands, Illegal Block in the Back, Tandem Buck Block, Objectionable Conduct, Default |
+| Pass Interference | 3.0 | Pass Interference |
+| Safety Related | 5.0 | Unnecessary Roughness, Personal Foul |
 
 ### 2. Quarter Multiplier
 
@@ -62,10 +63,10 @@ Impact Score = Base Score × Quarter Multiplier
 
 | Penalty | Quarter | Calculation | Impact Score |
 |---------|---------|-------------|--------------|
-| Offside | Q1 | 3.0 × 1.0 | 3.0 |
-| Holding | Q2 | 8.0 × 1.25 | 10.0 |
-| Pass Interference | Q3 | 8.0 × 1.5 | 12.0 |
-| Personal Foul | Q4 | 15.0 × 2.0 | 30.0 |
+| Offside | Q1 | 1.0 × 1.0 | 1.0 |
+| Holding | Q2 | 2.0 × 1.25 | 2.5 |
+| Pass Interference | Q3 | 3.0 × 1.5 | 4.5 |
+| Personal Foul | Q4 | 5.0 × 2.0 | 10.0 |
 
 ---
 
@@ -154,16 +155,16 @@ Option:
 
 | Test Name | Description | Expected Result |
 |-----------|-------------|-----------------|
-| `testCalculateMinorPenaltyInQ1` | Offside penalty in Q1 | 3.0 × 1.0 = 3.0 |
-| `testCalculateSeverePenaltyInQ4` | Personal Foul in Q4 | 15.0 × 2.0 = 30.0 |
-| `testCalculateUpdatesEntityImpactScore` | Holding in Q2 | 8.0 × 1.25 = 10.0 |
+| `testCalculateMinorPenaltyInQ1` | Offside penalty in Q1 | 1.0 × 1.0 = 1.0 |
+| `testCalculateSeverePenaltyInQ4` | Personal Foul in Q4 | 5.0 × 2.0 = 10.0 |
+| `testCalculateUpdatesEntityImpactScore` | Holding in Q2 | 2.0 × 1.25 = 2.5 |
 
 ### AI-Generated Tests (Requirement 2)
 
 | Test Name | Description | Expected Result |
 |-----------|-------------|-----------------|
 | `testCalculateNullEntity` | Null entity handling | Returns 0.0 |
-| `testCalculateUnknownPenalty` | Unrecognized penalty type | Default 5.0 × multiplier |
+| `testCalculateUnknownPenalty` | Unrecognized penalty type | Default 2.0 × multiplier |
 | `testCalculateInvalidQuarter` | Invalid quarter value | Defaults to 1.0x multiplier |
 
 ### Data Integration Test

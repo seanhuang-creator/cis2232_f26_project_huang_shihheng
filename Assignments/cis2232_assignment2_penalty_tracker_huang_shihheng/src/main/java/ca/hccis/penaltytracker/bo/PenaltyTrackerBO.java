@@ -5,24 +5,26 @@ import ca.hccis.penaltytracker.entity.PenaltyTracker;
 /**
  * Business Object for processing calculations related to PenaltyTracker.
  * Calculates game impact scores based on real PEIFOA penalty data.
- * Uses the standard Project Severity system: 0.5/1.0/2.0/3.0/5.0.
+ * Uses the standard Project Severity system from penalty_tracking_app: 0.5/1.0/2.0/3.0/5.0.
  *
  * @author Sean Huang
  * @since 2026-09
  */
 public class PenaltyTrackerBO {
 
-    // Standard Project Severity system (based on README: Minor=3.0, Technical/Major=8.0, Severe/Safety=15.0)
-    public static final double SEVERITY_MOUTH_GUARD_WARNING = 3.0;
-    public static final double SEVERITY_MINOR = 3.0;
-    public static final double SEVERITY_TECHNICAL_MAJOR = 8.0;
-    public static final double SEVERITY_PASS_INTERFERENCE = 8.0;
-    public static final double SEVERITY_SAFETY_RELATED = 15.0;
-    public static final double SEVERITY_DEFAULT = 5.0;
+    // Base severity weights from penalty_tracking_app (Source of Truth)
+    // Safety related infractions (unnecessary roughness / personal foul) have the highest severity
+    // Minor procedural infractions have the lowest severity
+    public static final double SEVERITY_MOUTH_GUARD_WARNING = 0.5;
+    public static final double SEVERITY_MINOR = 1.0;
+    public static final double SEVERITY_MODERATE = 2.0;
+    public static final double SEVERITY_PASS_INTERFERENCE = 3.0;
+    public static final double SEVERITY_SAFETY_RELATED = 5.0;
+    public static final double SEVERITY_DEFAULT = 2.0;
 
     /**
      * Calculates the Impact Score of a penalty based on infraction type and quarter.
-     * Evaluates severity using the standard Project Severity system.
+     * Evaluates severity using the standard Project Severity system from penalty_tracking_app.
      *
      * @param entity The PenaltyTracker entity containing penalty data
      * @return Calculated impact score as a double
@@ -37,7 +39,7 @@ public class PenaltyTrackerBO {
         double baseScore = SEVERITY_DEFAULT; // Default base score for unspecified penalties
         String penaltyType = entity.getPenalty() != null ? entity.getPenalty().toLowerCase() : "";
 
-        // 1. Minor Procedural Infractions (Severity: 3.0 per README)
+        // 1. Minor Procedural Infractions (Severity: 1.0 per penalty_tracking_app)
         // Matches Project classification: Offside, Procedure, No Yards, Time Count Violation, Illegal Formation
         if (penaltyType.contains("offside")
                 || penaltyType.contains("procedure")
@@ -46,11 +48,11 @@ public class PenaltyTrackerBO {
                 || penaltyType.contains("formation")) {
             baseScore = SEVERITY_MINOR;
         }
-        // Equipment warning (Severity: 3.0 per README - Minor category)
+        // Equipment warning (Severity: 0.5 per penalty_tracking_app)
         else if (penaltyType.contains("mouth guard") || penaltyType.contains("equipment")) {
             baseScore = SEVERITY_MOUTH_GUARD_WARNING;
         }
-        // 2. Technical / Major Infractions (Severity: 8.0 per README)
+        // 2. Moderate Infractions (Severity: 2.0 per penalty_tracking_app)
         // Matches Project classification: Holding, Illegal Block in the Back, Kick Out of Bounds,
         // Intentional Grounding, Illegal Use of Hands, Tandem Buck Block, Objectionable Conduct
         else if (penaltyType.contains("holding")
@@ -60,13 +62,13 @@ public class PenaltyTrackerBO {
                 || penaltyType.contains("use of hands")
                 || penaltyType.contains("buck block")
                 || penaltyType.contains("objectionable")) {
-            baseScore = SEVERITY_TECHNICAL_MAJOR;
+            baseScore = SEVERITY_MODERATE;
         }
-        // 3. Pass Interference (Severity: 8.0 per README - Technical/Major category)
+        // 3. Pass Interference (Severity: 3.0 per penalty_tracking_app)
         else if (penaltyType.contains("pass interference")) {
             baseScore = SEVERITY_PASS_INTERFERENCE;
         }
-        // 4. Safety Related Infractions (Severity: 15.0 per README)
+        // 4. Safety Related Infractions (Severity: 5.0 per penalty_tracking_app)
         // Matches Project classification: Unnecessary Roughness, Personal Foul
         else if (penaltyType.contains("roughness")
                 || penaltyType.contains("personal foul")) {
