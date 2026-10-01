@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>info.hccis</groupId>
-    <artifactId>cis1232_start_last_first</artifactId>
+    <artifactId>cis2232_assignment2_penalty_tracker_huang_shihheng</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
     <properties>
@@ -11,7 +11,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
-    <name>cis1201_startingmenu_last_first</name>
+    <name>cis2232_assignment2_penalty_tracker_huang_shihheng</name>
     <dependencies>
         <dependency>
             <groupId>com.google.code.gson</groupId>

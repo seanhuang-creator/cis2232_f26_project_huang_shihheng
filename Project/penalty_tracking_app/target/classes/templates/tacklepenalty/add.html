@@ -235,9 +235,9 @@
                 let multiplier = 1.0;
                 switch (quarter) {
                     case 1: multiplier = 1.0; break;
-                    case 2: multiplier = 2.0; break;
-                    case 3: multiplier = 3.0; break;
-                    case 4: multiplier = 4.0; break;
+                    case 2: multiplier = 1.25; break; // ✅ 修改為 1.25
+                    case 3: multiplier = 1.5; break;  // ✅ 修改為 1.5
+                    case 4: multiplier = 2.0; break;  // ✅ 修改為 2.0
                 }
 
                 // Calculate and display to 1 decimal place

@@ -5,15 +5,24 @@ import ca.hccis.penaltytracker.entity.PenaltyTracker;
 /**
  * Business Object for processing calculations related to PenaltyTracker.
  * Calculates game impact scores based on real PEIFOA penalty data.
+ * Uses the standard Project Severity system: 0.5/1.0/2.0/3.0/5.0.
  *
  * @author Sean Huang
  * @since 2026-09
  */
 public class PenaltyTrackerBO {
 
+    // Standard Project Severity system (0.5 / 1.0 / 2.0 / 3.0 / 5.0)
+    public static final double SEVERITY_MOUTH_GUARD_WARNING = 0.5;
+    public static final double SEVERITY_MINOR = 1.0;
+    public static final double SEVERITY_MODERATE = 2.0;
+    public static final double SEVERITY_PASS_INTERFERENCE = 3.0;
+    public static final double SEVERITY_SAFETY_RELATED = 5.0;
+    public static final double SEVERITY_DEFAULT = 2.0;
+
     /**
      * Calculates the Impact Score of a penalty based on infraction type and quarter.
-     * Evaluates severity using real PEIFOA infraction categories.
+     * Evaluates severity using the standard Project Severity system.
      *
      * @param entity The PenaltyTracker entity containing penalty data
      * @return Calculated impact score as a double
@@ -25,37 +34,43 @@ public class PenaltyTrackerBO {
             return 0.0;
         }
 
-        double baseScore = 5.0; // Default base score for unspecified penalties
+        double baseScore = SEVERITY_DEFAULT; // Default base score for unspecified penalties
         String penaltyType = entity.getPenalty() != null ? entity.getPenalty().toLowerCase() : "";
 
-        // 1. Minor Infractions (Base Score: 3.0)
-        // Matches real data: Offside, Procedure, Mouth Guard Warning, No Yards, Time Count Violation, Illegal Formation, Illegal Equipment
+        // 1. Minor Procedural Infractions (Severity: 1.0)
+        // Matches Project classification: Offside, Procedure, No Yards, Time Count Violation, Illegal Formation
         if (penaltyType.contains("offside")
                 || penaltyType.contains("procedure")
-                || penaltyType.contains("mouth guard")
                 || penaltyType.contains("no yards")
                 || penaltyType.contains("time count")
-                || penaltyType.contains("formation")
-                || penaltyType.contains("equipment")) {
-            baseScore = 3.0;
+                || penaltyType.contains("formation")) {
+            baseScore = SEVERITY_MINOR;
         }
-        // 2. Technical / Major Infractions (Base Score: 8.0)
-        // Matches real data: Holding, Pass Interference, Illegal Block in the Back, Kick Out of Bounds, Intentional Grounding, Illegal Use of Hands, Tandem Buck Block
+        // Equipment warning (Severity: 0.5)
+        else if (penaltyType.contains("mouth guard") || penaltyType.contains("equipment")) {
+            baseScore = SEVERITY_MOUTH_GUARD_WARNING;
+        }
+        // 2. Moderate Infractions (Severity: 2.0)
+        // Matches Project classification: Holding, Illegal Block in the Back, Kick Out of Bounds,
+        // Intentional Grounding, Illegal Use of Hands, Tandem Buck Block, Objectionable Conduct
         else if (penaltyType.contains("holding")
-                || penaltyType.contains("pass interference")
                 || penaltyType.contains("illegal block")
                 || penaltyType.contains("kick out of bounds")
                 || penaltyType.contains("grounding")
                 || penaltyType.contains("use of hands")
-                || penaltyType.contains("buck block")) {
-            baseScore = 8.0;
+                || penaltyType.contains("buck block")
+                || penaltyType.contains("objectionable")) {
+            baseScore = SEVERITY_MODERATE;
         }
-        // 3. Severe Safety & Conduct Infractions (Base Score: 15.0)
-        // Matches real data: Unnecessary Roughness, Objectionable Conduct, Personal Foul
+        // 3. Pass Interference (Severity: 3.0)
+        else if (penaltyType.contains("pass interference")) {
+            baseScore = SEVERITY_PASS_INTERFERENCE;
+        }
+        // 4. Safety Related Infractions (Severity: 5.0)
+        // Matches Project classification: Unnecessary Roughness, Personal Foul
         else if (penaltyType.contains("roughness")
-                || penaltyType.contains("objectionable")
                 || penaltyType.contains("personal foul")) {
-            baseScore = 15.0;
+            baseScore = SEVERITY_SAFETY_RELATED;
         }
 
         // Apply quarter multiplier (Later quarters significantly increase impact on game outcome)

@@ -23,9 +23,9 @@ public class TacklePenaltyBO {
     public static final double SEVERITY_SAFETY_RELATED = 5.0;
     public static final double SEVERITY_DEFAULT = 2.0;
 
-    //The later in the game the flag is thrown, the more impact it can
-    //have. The multiplier matches the quarter (Q1 x1, Q4 x4).
-    private static final double[] QUARTER_MULTIPLIERS = {0.0, 1.0, 2.0, 3.0, 4.0};
+    // The later in the game the flag is thrown, the higher its potential impact.
+    // Multipliers based on quarter: Q1=1.0x, Q2=1.25x, Q3=1.5x, Q4=2.0x.
+    private static final double[] QUARTER_MULTIPLIERS = {0.0, 1.0, 1.25, 1.5, 2.0};
 
     private static final Map<String, Double> PENALTY_SEVERITIES = new HashMap<>();
 
