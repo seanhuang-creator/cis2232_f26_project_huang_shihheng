@@ -1,4 +1,4 @@
-# PEIFOA Tackle Penalty Tracker
+# PEIFOA 2026 Tackle Penalty Tracker
 
 **Course:** CIS 2232 - Object-Orient Programming I
 **Assignment:** Assignment 2 - Test Driven Development
