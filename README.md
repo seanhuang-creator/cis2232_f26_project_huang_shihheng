@@ -1,7 +1,6 @@
 # PEIFOA 2026 Tackle Penalty Tracker
 
 **Course:** CIS 2232 - Object-Orient Programming I
-**Assignment:** Assignment 2 - Test Driven Development
 
 ## Development Team
 
@@ -223,6 +222,13 @@ This project follows strict Java programming standards:
 - [ ] Export to CSV/PDF
 - [ ] Team discipline leaderboard
 - [ ] Referee workload dashboard
+
+---
+
+## Report Details (Sprint 2)
+
+### Referee Report
+Enter a referee name and the report will return any penalty records called by that official (matching or containing the entered referee name).
 
 ---
 
