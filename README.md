@@ -1,6 +1,7 @@
 # PEIFOA 2026 Tackle Penalty Tracker
 
 **Course:** CIS 2232 - Object-Orient Programming I
+**Instructor:** BJ MacLean
 
 ## Development Team
 
