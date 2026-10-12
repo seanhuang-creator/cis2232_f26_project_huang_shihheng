@@ -71,7 +71,7 @@ All requirements verified:
     - Console: 101 (Offside Q1, Score 1.0), 102 (Mouth Guard Q2, Score 0.625), 103 (Holding Q3, Score 3.0)
     - GUI: 201 (Pass Interference Q4, Score 6.0), 202 (Unnecessary Roughness Q4, Score 10.0)
     - Both Views show: `Total records: 5 / Shared Accumulator: 5 records, Score=20.625`
-    - tested .json file was deleted after the test anywas.
+    - Tested .json file was deleted after the test anywas.
 - [x] **Independent Execution & Termination** - Tested: Console `X` -> `Console Thread Exiting - Goodbye!` while GUI menu still alive. GUI `X` -> `GUI Thread Exiting - Goodbye!` while console still waiting. Both `X` -> JVM exits with `exit code 0`.
 
 ### Sample Run
