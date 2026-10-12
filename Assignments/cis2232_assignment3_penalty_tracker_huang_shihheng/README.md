@@ -1,11 +1,11 @@
 # Assignment #3 - Multi-Threading Penalty Tracker
 ### PEIFOA 2026 Tackle Penalty Tracker
 
-**Course:** CIS 2232 - Object-Oriented Programming I
-**Instructor:** BJ MacLean
-**Author:** Sean Huang (Shih Heng Huang)
-**Date:** October 10th, 2026
-**Topic:** Multi-Threading Implementation for Penalty Tracking
+* **Course:** CIS 2232 - Object-Oriented Programming I
+* **Instructor:** BJ MacLean
+* **Author:** Sean Huang (Shih Heng Huang)
+* **Date:** October 10th, 2026
+* **Topic:** Multi-Threading Implementation for Penalty Tracking
 
 ---
 
@@ -19,23 +19,22 @@ This assignment extends Assignment #1 and #2 to apply **multi-threading** in a J
 
 ## 🏗️ Project Structure
 
+```text
 cis2232_assignment3_penalty_tracker_huang_shihheng/
 ├── data/
-│ └── data_huang_shihheng.json # Shared accumulator file (both threads)
+│   └── data_huang_shihheng.json # Shared accumulator file (both threads)
 ├── src/main/java/ca/hccis/penaltytracker/
-│ ├── Controller.java # Main entry point - launches 2 threads
-│ ├── entity/
-│ │ └── PenaltyTracker.java # Entity with static accumulator
-│ ├── bo/
-│ │ └── PenaltyTrackerBO.java # Business logic + calculate() from A2
-│ └── threads/
-│ ├── ConsoleRunner.java # Thread 1: Console A/V/X menu
-│ └── GuiRunner.java # Thread 2: JOptionPane A/V/X menu
+│   ├── Controller.java          # Main entry point - launches 2 threads
+│   ├── entity/
+│   │   └── PenaltyTracker.java  # Entity with static accumulator
+│   ├── bo/
+│   │   └── PenaltyTrackerBO.java# Business logic + calculate() from A2
+│   └── threads/
+│       ├── ConsoleRunner.java   # Thread 1: Console A/V/X menu
+│       └── GuiRunner.java       # Thread 2: JOptionPane A/V/X menu
 ├── pom.xml
 └── README.md
-
----
-
+```
 
 ### Key Classes
 
@@ -76,8 +75,9 @@ All requirements verified:
 
 ### Sample Run
 
+```text
 Multi-threading Penalty Tracker - A3
-File:./data/data_huang_shihheng.json
+File: ./data/data_huang_shihheng.json
 
 GUI Thread Started - ID: 53
 Console Thread Started - ID: 55
@@ -85,6 +85,7 @@ Console Thread Started - ID: 55
 [Accumulator Updated - Shared by Both Threads]
 Total Records (Console + GUI): 5
 Total Impact Score (Console + GUI): 20.625
+```
 
 ---
 
