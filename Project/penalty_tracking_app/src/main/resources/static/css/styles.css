@@ -590,3 +590,50 @@ table.dataTable thead th.sorting_desc:hover::after:hover {
 #theData {
     margin-bottom: 0 !important;
 }
+/* =========================================================
+Chart box for Referee/Team Report - dark theme compatible
+========================================================= */
+.chart-box {
+    background: #1e1e1e !important;
+    border: 1px solid #2a2a2a !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
+    margin-bottom: 20px !important;
+}
+
+.chart-box .title,
+.chart-box h4 {
+    color: #ffc107 !important;
+}
+
+.chart-box p,
+.chart-box .is-size-7 {
+    color: #a0a0a0 !important;
+}
+
+/* Ensure table inside chart-box summary is readable */
+.chart-box table {
+    background: #2b2b2b !important;
+}
+
+.chart-box table th {
+    background: #1f1f1f !important;
+    color: #ffc107 !important;
+}
+
+.chart-box table td {
+    background: #2b2b2b !important;
+    color: #ffffff !important;
+}
+
+/* KPI boxes */
+.box {
+    background: #1e1e1e !important;
+    border: 1px solid #2a2a2a !important;
+}
+.box .heading {
+    color: #a0a0a0 !important;
+}
+.box .title {
+    color: #ffffff !important;
+}

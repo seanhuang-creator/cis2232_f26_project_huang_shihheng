@@ -8,31 +8,36 @@
     display: inline-block;
     float: right
 }
-
 .cd {
     color: #F00 !important;
     font-weight: bold;
     margin-bottom: -48px
 }
-
 label {
     margin-right: 8px
-}</style>
+}
+/* Dark theme chart boxes - overrides global white text forced in styles.css */
+.chart-box {
+    background: #1e1e1e !important;
+    border: 1px solid #2a2a2a !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
+}
+.chart-box .title {
+    color: #ffc107 !important;
+}
+.chart-box p {
+    color: #a0a0a0 !important;
+}
+</style>
 <nav th:replace="fragments/navHeader :: navbar"></nav>
-
-
 <div class="container has-text-centered">
     <h2 class="title is-2" th:text="#{label.report.referee.team.report}">_</h2>
-
     <form th:action="@{/report/penalty/name/submit}" method="post" class="wbb"
           style="display:inline-block;text-align:left!important">
-
-        <!-- Hidden field to store actual referee/team value for form submission -->
         <input type="hidden" id="refereeValue" name="name" th:value="${reportInput.name}" />
-
         <p>
             <label>Name (Referee/Team): </label>
-            <!-- Dropdown matching add.html style with A-Z sorted referees -->
             <select id="refereeSelect" onchange="handleRefereeSelect()">
                 <option value="" disabled selected hidden>-- Select --</option>
                 <option value="__MANUAL__">(Add Manually)</option>
@@ -42,19 +47,16 @@ label {
                         th:if="${ref != null and ref != ''}"
                         th:selected="${ref == reportInput.name}"></option>
             </select>
-            <!-- Manual input field -->
             <input type="text" id="refereeManual" style="display:none; margin-top: 8px;" placeholder="Enter name manually" />
         </p>
         <br></br>
         <button style="display:block;margin-top:24px!important" class="centered">Submit</button>
     </form>
-
     <script>
         function handleRefereeSelect() {
             const select = document.getElementById('refereeSelect');
             const manualInput = document.getElementById('refereeManual');
             const hiddenField = document.getElementById('refereeValue');
-
             if (select.value === '__MANUAL__') {
                 select.style.display = 'none';
                 manualInput.style.display = 'block';
@@ -67,13 +69,11 @@ label {
                 hiddenField.value = select.value;
             }
         }
-
         document.addEventListener('DOMContentLoaded', function() {
             const select = document.getElementById('refereeSelect');
             const manualInput = document.getElementById('refereeManual');
             const hiddenField = document.getElementById('refereeValue');
-
-            // 頁面載入時初始化：檢查隱藏欄位是否有值，並自動對應選單或手動輸入框
+            // Initialize on page load
             if (hiddenField.value) {
                 let found = false;
                 for (let i = 0; i < select.options.length; i++) {
@@ -83,7 +83,6 @@ label {
                         break;
                     }
                 }
-                // 若該值不在下拉選單內，切換為手動輸入模式
                 if (!found) {
                     select.value = '__MANUAL__';
                     select.style.display = 'none';
@@ -91,13 +90,9 @@ label {
                     manualInput.value = hiddenField.value;
                 }
             }
-
-            // Handle manual input typing
             manualInput.addEventListener('input', function() {
                 hiddenField.value = this.value;
             });
-
-            // Handle select change
             select.addEventListener('change', function() {
                 if (this.value && this.value !== '__MANUAL__') {
                     hiddenField.value = this.value;
@@ -105,46 +100,96 @@ label {
             });
         });
     </script>
-
     <p th:if="${not #strings.isEmpty(message)}" th:text="#{error.message.no.data.found.name}">not found</p>
-    <!--https://stackoverflow.com/a/33106495-->
-    <table class="wbb centered" th:if="${not #lists.isEmpty(reportInput.tacklePenalties)}">
+    <table class="wbb centered" th:if="${not #lists.isEmpty(reportInput.tacklePenalties)}" style="margin-top:24px">
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Date</th>
-            <th>Home Team</th>
-            <th>Away Team</th>
-            <th>Penalty</th>
-            <th>Quarter</th>
-            <th>Penalized Team</th>
-            <th>Offending Player</th>
-            <th>Age Division</th>
-            <th>Referee</th>
-            <th>Impact Score</th>
+            <th>ID</th><th>Date</th><th>Home Team</th><th>Away Team</th><th>Penalty</th><th>Quarter</th><th>Penalized Team</th><th>Offending Player</th><th>Age Division</th><th>Referee</th><th>Impact Score</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="item,iterStat : ${reportInput.tacklePenalties}">
-            <td th:text="${item.id}"></td>
-            <td th:text="${item.date}"></td>
-            <td th:text="${item.homeTeam}"></td>
-            <td th:text="${item.awayTeam}"></td>
-            <td th:text="${item.penalty}"></td>
-            <td th:text="${item.quarter}"></td>
-            <td th:text="${item.penalizedTeam}"></td>
-            <td th:text="${item.offendingPlayer}"></td>
-            <td th:text="${item.ageDivision}"></td>
-            <td th:text="${item.referee}"></td>
-            <td th:text="${item.impactScore}"></td>
+        <tr th:each="item : ${reportInput.tacklePenalties}">
+            <td th:text="${item.id}"></td><td th:text="${item.date}"></td><td th:text="${item.homeTeam}"></td><td th:text="${item.awayTeam}"></td><td th:text="${item.penalty}"></td><td th:text="${item.quarter}"></td><td th:text="${item.penalizedTeam}"></td><td th:text="${item.offendingPlayer}"></td><td th:text="${item.ageDivision}"></td><td th:text="${item.referee}"></td><td th:text="${item.impactScore}"></td>
         </tr>
         </tbody>
     </table>
-
+    <div th:if="${not #lists.isEmpty(reportInput.tacklePenalties)}" style="margin-top:40px; text-align:left">
+        <div class="columns is-multiline is-centered" style="max-width:900px; margin:0 auto 24px auto">
+            <div class="column is-4"><div class="box has-text-centered"><p class="heading">Total Penalties</p><p class="title is-4" th:text="${reportInput.totalCount}">0</p></div></div>
+            <div class="column is-4"><div class="box has-text-centered"><p class="heading">Average Impact</p><p class="title is-4" th:text="${reportInput.averageImpact}">0</p></div></div>
+            <div class="column is-4"><div class="box has-text-centered"><p class="heading">Max Impact</p><p class="title is-4" th:text="${reportInput.maxImpact}">0</p></div></div>
+        </div>
+        <div class="columns is-multiline">
+            <div class="column is-6"><div class="chart-box"><h4 class="title is-5 has-text-centered">Penalty Type Count</h4><div style="height:320px; margin-top:12px"><canvas id="penaltyCountChart"></canvas></div></div></div>
+            <div class="column is-6"><div class="chart-box"><h4 class="title is-5 has-text-centered">Average Impact by Penalty Type</h4><div style="height:320px; margin-top:12px"><canvas id="avgImpactChart"></canvas></div></div></div>
+            <div class="column is-6"><div class="chart-box"><h4 class="title is-5 has-text-centered">Penalties by Quarter</h4><div style="height:320px; margin-top:12px"><canvas id="quarterChart"></canvas></div></div></div>
+            <div class="column is-6"><div class="chart-box"><h4 class="title is-5 has-text-centered">Penalized Team Distribution</h4><div style="height:320px; margin-top:12px"><canvas id="teamChart"></canvas></div></div></div>
+            <div class="column is-12"><div class="chart-box"><h4 class="title is-5 has-text-centered">Trend by Date</h4><div style="height:360px; margin-top:12px"><canvas id="dateTrendChart"></canvas></div></div></div>
+            <div class="column is-6"><div class="chart-box"><h4 class="title is-5 has-text-centered">Age Division Analysis</h4><div style="height:320px; margin-top:12px"><canvas id="ageDivisionChart"></canvas></div></div></div>
+            <div class="column is-6"><div class="chart-box"><h4 class="title is-5 has-text-centered">Summary Table</h4><table class="table is-fullwidth is-striped is-size-7" style="margin-top:12px"><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td>Most Frequent Penalty</td><td th:text="${reportInput.penaltyTypeLabels != null && !reportInput.penaltyTypeLabels.isEmpty()} ? ${reportInput.penaltyTypeLabels[0]} : 'N/A'">N/A</td></tr><tr><td>Highest Avg Impact</td><td th:text="${reportInput.penaltyAvgLabels != null && !reportInput.penaltyAvgLabels.isEmpty()} ? ${reportInput.penaltyAvgLabels[0]} : 'N/A'">N/A</td></tr><tr><td>Busiest Quarter</td><td id="busiestQuarterCell">-</td></tr><tr><td>Most Penalized Team</td><td th:text="${reportInput.teamLabels != null && !reportInput.teamLabels.isEmpty()} ? ${reportInput.teamLabels[0]} : 'N/A'">N/A</td></tr></tbody></table></div></div>
+        </div>
+    </div>
 </div>
-
 <br></br>
-
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    const penaltyTypeLabels = /*[[${reportInput.penaltyTypeLabels}]]*/ [];
+    const penaltyCountData = /*[[${reportInput.penaltyCountData}]]*/ [];
+    const penaltyAvgLabels = /*[[${reportInput.penaltyAvgLabels}]]*/ [];
+    const penaltyAvgData = /*[[${reportInput.penaltyAvgData}]]*/ [];
+    const quarterLabels = /*[[${reportInput.quarterLabels}]]*/ [];
+    const quarterCountData = /*[[${reportInput.quarterCountData}]]*/ [];
+    const teamLabels = /*[[${reportInput.teamLabels}]]*/ [];
+    const teamCountData = /*[[${reportInput.teamCountData}]]*/ [];
+    const dateLabels = /*[[${reportInput.dateLabels}]]*/ [];
+    const dateCountData = /*[[${reportInput.dateCountData}]]*/ [];
+    const dateImpactData = /*[[${reportInput.dateImpactData}]]*/ [];
+    const ageDivisionLabels = /*[[${reportInput.ageDivisionLabels}]]*/ [];
+    const ageDivisionCountData = /*[[${reportInput.ageDivisionCountData}]]*/ [];
+    const ageDivisionAvgData = /*[[${reportInput.ageDivisionAvgData}]]*/ [];
+    const whiteTick = { color: '#a0a0a0' };
+    const whiteGrid = { color: 'rgba(255,255,255,0.1)' };
+    const legendWhite = { labels: { color: '#ffffff' } };
+    if (penaltyTypeLabels && penaltyTypeLabels.length > 0) {
+        new Chart(document.getElementById('penaltyCountChart'), {
+            type: 'bar',
+            data: { labels: penaltyTypeLabels, datasets: [{ label: 'Count', data: penaltyCountData, backgroundColor: '#485fc7', borderWidth: 1 }] },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false, labels: { color: '#ffffff' } } }, scales: { x: { beginAtZero: true, ticks: whiteTick, grid: whiteGrid }, y: { ticks: whiteTick, grid: whiteGrid } } }
+        });
+        new Chart(document.getElementById('avgImpactChart'), {
+            type: 'bar',
+            data: { labels: penaltyAvgLabels, datasets: [{ label: 'Avg Impact', data: penaltyAvgData, backgroundColor: penaltyAvgLabels.map((_, i) => i === 0 ? '#ef4444' : '#fbbf24'), borderWidth: 1 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: whiteTick, grid: whiteGrid }, y: { beginAtZero: true, ticks: whiteTick, grid: whiteGrid } } }
+        });
+        new Chart(document.getElementById('quarterChart'), {
+            type: 'bar',
+            data: { labels: quarterLabels, datasets: [{ label: 'Penalties', data: quarterCountData, backgroundColor: ['#a78bfa', '#60a5fa', '#34d399', '#fbbf24'], borderWidth: 1 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: whiteTick, grid: whiteGrid }, y: { beginAtZero: true, ticks: whiteTick, grid: whiteGrid } } }
+        });
+        if (quarterCountData.length > 0) {
+            let maxIdx = 0; let maxVal = quarterCountData[0];
+            for (let i = 1; i < quarterCountData.length; i++) { if (quarterCountData[i] > maxVal) { maxVal = quarterCountData[i]; maxIdx = i; } }
+            const cell = document.getElementById('busiestQuarterCell');
+            if (cell && quarterLabels[maxIdx]) { cell.textContent = quarterLabels[maxIdx] + ' (' + maxVal + ')'; }
+        }
+        new Chart(document.getElementById('teamChart'), {
+            type: 'bar',
+            data: { labels: teamLabels, datasets: [{ label: 'Count', data: teamCountData, backgroundColor: '#34d399', borderWidth: 1 }] },
+            options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: whiteTick, grid: whiteGrid }, y: { ticks: whiteTick, grid: whiteGrid } } }
+        });
+        new Chart(document.getElementById('dateTrendChart'), {
+            type: 'line',
+            data: { labels: dateLabels, datasets: [{ label: 'Penalty Count', data: dateCountData, borderColor: '#60a5fa', backgroundColor: 'rgba(96,165,250,0.2)', tension: 0.3, yAxisID: 'y' }, { label: 'Total Impact', data: dateImpactData, borderColor: '#fb923c', backgroundColor: 'rgba(251,146,60,0.2)', tension: 0.3, yAxisID: 'y1' }] },
+            options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { position: 'top', labels: { color: '#ffffff' } } }, scales: { x: { ticks: whiteTick, grid: whiteGrid }, y: { type: 'linear', display: true, position: 'left', beginAtZero: true, title: { display: true, text: 'Count', color: '#ffffff' }, ticks: whiteTick, grid: whiteGrid }, y1: { type: 'linear', display: true, position: 'right', beginAtZero: true, title: { display: true, text: 'Impact', color: '#ffffff' }, ticks: whiteTick, grid: { drawOnChartArea: false } } } }
+        });
+        new Chart(document.getElementById('ageDivisionChart'), {
+            type: 'bar',
+            data: { labels: ageDivisionLabels, datasets: [{ label: 'Count', data: ageDivisionCountData, backgroundColor: '#60a5fa', yAxisID: 'y' }, { label: 'Avg Impact', data: ageDivisionAvgData, backgroundColor: '#fbbf24', yAxisID: 'y1' }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#ffffff' } } }, scales: { x: { ticks: whiteTick, grid: whiteGrid }, y: { beginAtZero: true, position: 'left', title: { display: true, text: 'Count', color: '#ffffff' }, ticks: whiteTick, grid: whiteGrid }, y1: { beginAtZero: true, position: 'right', title: { display: true, text: 'Avg Impact', color: '#ffffff' }, ticks: whiteTick, grid: { drawOnChartArea: false } } } }
+        });
+    }
+    /*]]>*/
+</script>
 <footer th:replace="fragments/footer :: footer"></footer>
 </body>
 </html>
