@@ -19,6 +19,13 @@ public class ConsoleRunner implements Runnable {
         do {
             // Show menu using CisUtility (console only)
             option = CisUtility.getInputString(Controller.MENU);
+            if (option == null) {
+                break;
+            }
+            option = option.trim();
+            if (option.isEmpty()) {
+                continue; // ignore empty Enter from GUI dialog, re-print menu without Invalid message
+            }
 
             switch (option.toUpperCase()) {
                 case "A":
@@ -36,7 +43,7 @@ public class ConsoleRunner implements Runnable {
                     System.out.println("Invalid option. Please enter A, V, or X.");
                     break;
             }
-        } while (!option.equalsIgnoreCase("X"));
+        } while (option != null && !option.equalsIgnoreCase("X"));
     }
 
     /**

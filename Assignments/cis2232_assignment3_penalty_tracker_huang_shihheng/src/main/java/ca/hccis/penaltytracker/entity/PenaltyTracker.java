@@ -1,5 +1,6 @@
 package ca.hccis.penaltytracker.entity;
 
+import ca.hccis.penaltytracker.Controller;
 import ca.hccis.penaltytracker.util.CisUtility;
 import com.google.gson.Gson;
 import javax.swing.*;
@@ -35,6 +36,8 @@ public class PenaltyTracker {
         System.out.println("Total Records (Console + GUI): " + totalRecords);
         System.out.println("Total Impact Score (Console + GUI): " + totalImpactScore);
         System.out.println("--------------------------------------------");
+        // Print menu right after accumulator so console menu doesn't "run away"
+        System.out.println(Controller.MENU + " -->");
     }
 
     public static synchronized int getTotalRecords() {

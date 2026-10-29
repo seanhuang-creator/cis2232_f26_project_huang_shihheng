@@ -24,9 +24,10 @@ public class GuiRunner implements Runnable {
                     "Penalty Tracker - GUI Thread Menu",
                     JOptionPane.QUESTION_MESSAGE);
 
-            // If user clicks Cancel or closes window
+            // If user clicks Cancel or closes window - fixed to avoid NPE
             if (option == null) {
-                continue;
+                System.out.println("GUI Thread Exiting - Goodbye!");
+                break;
             }
 
             switch (option.toUpperCase()) {
@@ -43,7 +44,7 @@ public class GuiRunner implements Runnable {
                     JOptionPane.showMessageDialog(null, "Invalid option. Please enter A, V, or X.", "Error", JOptionPane.ERROR_MESSAGE);
                     break;
             }
-        } while (!option.equalsIgnoreCase("X"));
+        } while (option != null && !option.equalsIgnoreCase("X"));
     }
 
     private void processAddGUI() {
