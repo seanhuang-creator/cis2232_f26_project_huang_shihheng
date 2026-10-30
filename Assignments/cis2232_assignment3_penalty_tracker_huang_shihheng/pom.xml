@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>info.hccis</groupId>
-    <artifactId>cis1232_ assignment3_penalty_tracker_huang_shihheng</artifactId>
+    <artifactId>cis1232_assignment3_penalty_tracker_huang_shihheng</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
     <properties>

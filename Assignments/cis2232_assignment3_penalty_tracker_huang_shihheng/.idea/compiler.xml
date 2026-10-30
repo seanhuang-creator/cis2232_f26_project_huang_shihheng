@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="cis2232_assignment3_penalty_tracker_huang_shihheng" />
         <module name="cis1232_ assignment3_penalty_tracker_huang_shihheng" />
       </profile>
     </annotationProcessing>
