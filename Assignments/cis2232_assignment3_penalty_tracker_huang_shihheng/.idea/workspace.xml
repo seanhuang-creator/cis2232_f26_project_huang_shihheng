@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RunManager">
+    <configuration name="Controller" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ca.hccis.penaltytracker.Controller" />
+      <module name="cis1232_assignment3_penalty_tracker_huang_shihheng" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ca.hccis.penaltytracker.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Controller" />
+      </list>
+    </recent_temporary>
+  </component>
+</project>
