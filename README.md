@@ -230,19 +230,19 @@ This project follows strict Java programming standards:
 
 This sprint implements reports using DAO with JDBC and File I/O export to `c:\cis2232\`.
 
-### Report 1: Referee/Team Report
-**Input:** Referee name or Team name (supports partial match LIKE %name%), e.g. `Chris`
-**Processing:** `TacklePenaltyBO.processSelectAllByRefereeTeamName()` -> `TacklePenaltyDAO` using JDBC (DriverManager, Statement, ResultSet)
-- SQL: `SELECT * FROM TacklePenalty WHERE referee LIKE '%name%' OR homeTeam LIKE '%name%' OR awayTeam LIKE '%name%' OR penalizedTeam LIKE '%name%'`
-**Expected Display:** Table with all matching penalty records + 6 Charts (Penalty Type Distribution, Avg Impact by Type, Quarter Distribution, Penalized Team Count, Date Trend, Age Division Analysis) + KPI (Total Count, Average Impact, Max Impact)
-**File I/O:** Auto export to `c:\cis2232\PenaltyByReferee_<name>_<yyyyMMddHHmmss>.txt` with `mkdirs()` if directory not exists
+### Report 1: Referee / Team Report
+* **Input & Search:** Enter a referee name or team name (supports partial keyword matching using `LIKE %name%`, e.g., `Chris`). The system searches across referee names, home teams, away teams, and penalized teams.
+* **Processing:** `TacklePenaltyBO.processSelectAllByRefereeTeamName()` -> `TacklePenaltyDAO` using JDBC (DriverManager, Statement, ResultSet)
+* **SQL Query:** `SELECT * FROM TacklePenalty WHERE referee LIKE '%name%' OR homeTeam LIKE '%name%' OR awayTeam LIKE '%name%' OR penalizedTeam LIKE '%name%'`
+* **Expected Display:** Table with all matching penalty records + 6 Charts (Penalty Type Distribution, Avg Impact by Type, Quarter Distribution, Penalized Team Count, Date Trend, Age Division Analysis) + KPI (Total Count, Average Impact, Max Impact)
+* **File I/O:** Auto export to `c:\cis2232\PenaltyByReferee_<name>_<yyyyMMddHHmmss>.txt` with `mkdirs()` if directory not exists
 
 ### Report 2: Impact Score Range Report  
-**Input:** Min and Max Impact Score, e.g. `3.0` to `4.0`
-**Processing:** `TacklePenaltyDAO.selectAllByImpactScoreMinMax()` using JDBC
-- SQL: `SELECT * FROM TacklePenalty WHERE impactScore BETWEEN min AND max`
-**Expected Display:** Table with all penalties within score range + Same 6 Charts + KPI as Report 1
-**File I/O:** Auto export to `c:\cis2232\PenaltyByScore_<min>-<max>_<yyyyMMddHHmmss>.txt` with `mkdirs()` if directory not exists
+* **Input & Filtering:** Enter a minimum and maximum impact score range (e.g., `3.0` to `4.0`) to filter and view all penalties falling within that score threshold.
+* **Processing:** `TacklePenaltyDAO.selectAllByImpactScoreMinMax()` using JDBC
+* **SQL Query:** `SELECT * FROM TacklePenalty WHERE impactScore BETWEEN min AND max`
+* **Expected Display:** Table with all penalties within score range + Same 6 Charts + KPI as Report 1
+* **File I/O:** Auto export to `c:\cis2232\PenaltyByScore_<min>-<max>_<yyyyMMddHHmmss>.txt` with `mkdirs()` if directory not exists
 
 **Additional:** Both reports include chart worth 5% grade, implemented with Chart.js. File export is automatic upon report submission.
 
