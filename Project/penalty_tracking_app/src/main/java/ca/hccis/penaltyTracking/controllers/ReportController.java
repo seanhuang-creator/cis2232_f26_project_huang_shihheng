@@ -49,11 +49,7 @@ public class ReportController {
     public String reportPenaltyName(Model model) {
         logger.info("Running the reports controller penalty name method");
         model.addAttribute("reportInput", new ReportPenalty());
-        List<String> refereesList = _tpr.findDistinctReferees();
-        if (refereesList != null) {
-            refereesList.sort(String.CASE_INSENSITIVE_ORDER);
-        }
-        model.addAttribute("referees", refereesList);
+        model.addAttribute("referees", getAllRefereeTeamNames());
         return "report/reportPenaltyName";
     }
 
@@ -77,14 +73,63 @@ public class ReportController {
         }
 
         model.addAttribute("reportInput", reportPenalty);
-
-        List<String> refereesList = _tpr.findDistinctReferees();
-        if (refereesList != null) {
-            refereesList.sort(String.CASE_INSENSITIVE_ORDER);
-        }
-        model.addAttribute("referees", refereesList);
+        model.addAttribute("referees", getAllRefereeTeamNames());
 
         return "report/reportPenaltyName";
+    }
+
+    /**
+     * Get combined list for the dropdown.
+     * First all referees sorted A-Z, then all teams sorted A-Z.
+     * Not merged alphabetically.
+     */
+    private List<String> getAllRefereeTeamNames() {
+        List<String> refereesList = _tpr.findDistinctReferees();
+        List<String> teamNames = _tpr.findAllDistinctTeamNames();
+
+        if (refereesList == null) {
+            refereesList = new ArrayList<>();
+        }
+        if (teamNames == null) {
+            teamNames = new ArrayList<>();
+        }
+
+        // Clean: drop null / blank, trim
+        List<String> cleanReferees = new ArrayList<>();
+        for (String s : refereesList) {
+            if (s != null && !s.trim().isEmpty()) {
+                cleanReferees.add(s.trim());
+            }
+        }
+        List<String> cleanTeams = new ArrayList<>();
+        for (String s : teamNames) {
+            if (s != null && !s.trim().isEmpty()) {
+                cleanTeams.add(s.trim());
+            }
+        }
+
+        // Sort each group separately A-Z
+        cleanReferees.sort(String.CASE_INSENSITIVE_ORDER);
+        cleanTeams.sort(String.CASE_INSENSITIVE_ORDER);
+
+        // Referees first, then teams. Dedupe case-insensitively so the same name is not shown twice.
+        List<String> result = new ArrayList<>();
+        Set<String> seenLower = new HashSet<>();
+        for (String s : cleanReferees) {
+            String key = s.toLowerCase();
+            if (!seenLower.contains(key)) {
+                seenLower.add(key);
+                result.add(s);
+            }
+        }
+        for (String s : cleanTeams) {
+            String key = s.toLowerCase();
+            if (!seenLower.contains(key)) {
+                seenLower.add(key);
+                result.add(s);
+            }
+        }
+        return result;
     }
 
     private void buildChartData(ReportPenalty reportPenalty) {
@@ -238,9 +283,10 @@ public class ReportController {
                 writer.write("Total Records: " + theList.size() + "\n");
                 writer.write("--------------------------------------------------\n");
                 for (TacklePenalty p : theList) {
-                    writer.write(String.format("ID:%d | Date:%s | %s vs %s | Penalty:%s | Q%d | Team:%s | Ref:%s | Score:%.1f\n",
+                    writer.write(String.format("ID:%d | Date:%s | %s vs %s | Penalty:%s | Q%d | Team:%s | Player:%s | Age:%s | Ref:%s | Score:%.2f\n\n",
                             p.getId(), p.getDate(), p.getHomeTeam(), p.getAwayTeam(),
                             p.getPenalty(), p.getQuarter(), p.getPenalizedTeam(),
+                            p.getOffendingPlayer(), p.getAgeDivision(),
                             p.getReferee(), p.getImpactScore() != null ? p.getImpactScore() : 0.0));
                 }
             }
@@ -274,9 +320,10 @@ public class ReportController {
                 writer.write("Total Records: " + theList.size() + "\n");
                 writer.write("--------------------------------------------------\n");
                 for (TacklePenalty p : theList) {
-                    writer.write(String.format("ID:%d | Date:%s | %s vs %s | Penalty:%s | Q%d | Team:%s | Ref:%s | Score:%.1f\n",
+                    writer.write(String.format("ID:%d | Date:%s | %s vs %s | Penalty:%s | Q%d | Team:%s | Player:%s | Age:%s | Ref:%s | Score:%.2f\n\n",
                             p.getId(), p.getDate(), p.getHomeTeam(), p.getAwayTeam(),
                             p.getPenalty(), p.getQuarter(), p.getPenalizedTeam(),
+                            p.getOffendingPlayer(), p.getAgeDivision(),
                             p.getReferee(), p.getImpactScore() != null ? p.getImpactScore() : 0.0));
                 }
             }

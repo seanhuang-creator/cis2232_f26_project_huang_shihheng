@@ -124,7 +124,7 @@ public class TacklePenaltyBO {
         ArrayList<TacklePenalty> penalties = tacklePenaltyDAO.selectAllByRefereeTeamName(name);
 
         //Also write the report to a file
-        CisUtilityFile.writeReportToFile("refereeTeamNameReport", penalties);
+        // CisUtilityFile.writeReportToFile("refereeTeamNameReport", penalties);
 
         return penalties;
     }
