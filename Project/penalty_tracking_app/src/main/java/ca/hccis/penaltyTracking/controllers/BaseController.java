@@ -1,9 +1,7 @@
 package ca.hccis.penaltyTracking.controllers;
 
+import ca.hccis.penaltyTracking.dao.TacklePenaltyDAO;
 import ca.hccis.penaltyTracking.jpa.entity.TacklePenalty;
-import org.springframework.ui.Model;
-import ca.hccis.penaltyTracking.repositories.CodeValueRepository;
-import ca.hccis.penaltyTracking.repositories.TacklePenaltyRepository;
 import ca.hccis.penaltyTracking.util.CisUtility;
 
 import jakarta.servlet.http.HttpSession;
@@ -13,6 +11,7 @@ import org.springframework.context.MessageSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -31,15 +30,6 @@ import java.util.Map;
  */
 @Controller
 public class BaseController {
-
-    private final CodeValueRepository _cvr;
-    private final TacklePenaltyRepository _tpr;
-
-    @Autowired
-    public BaseController(TacklePenaltyRepository tpr, CodeValueRepository cvr) {
-        _tpr = tpr;
-        _cvr = cvr;
-    }
 
     @Autowired
     private MessageSource messageSource;
@@ -63,13 +53,24 @@ public class BaseController {
         // Calculate the start date based on timeRange
         String startDate = calculateStartDate(timeRange, currentDate);
 
-        // Fetch penalties (all or filtered by date)
+        // Fetch penalties using DAO (JDBC) only, no JPA / _tpr
+        TacklePenaltyDAO penaltyDAO = new TacklePenaltyDAO();
+        ArrayList<TacklePenalty> allPenalties = penaltyDAO.selectAll();
+        if (allPenalties == null) {
+            allPenalties = new ArrayList<>();
+        }
+
         List<TacklePenalty> penalties;
         if ("all".equals(timeRange)) {
-            penalties = new ArrayList<>();
-            _tpr.findAll().forEach(penalties::add);
+            penalties = allPenalties;
         } else {
-            penalties = _tpr.findByDateGreaterThanEqual(startDate);
+            penalties = new ArrayList<>();
+            for (TacklePenalty penalty : allPenalties) {
+                String date = penalty.getDate();
+                if (date != null && date.compareTo(startDate) >= 0) {
+                    penalties.add(penalty);
+                }
+            }
         }
 
         // Aggregate impact scores by penalizedTeam

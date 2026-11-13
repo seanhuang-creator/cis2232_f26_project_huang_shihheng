@@ -4,10 +4,8 @@ import ca.hccis.penaltyTracking.bo.TacklePenaltyBO;
 import ca.hccis.penaltyTracking.dao.TacklePenaltyDAO;
 import ca.hccis.penaltyTracking.entity.ReportPenalty;
 import ca.hccis.penaltyTracking.jpa.entity.TacklePenalty;
-import ca.hccis.penaltyTracking.repositories.TacklePenaltyRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -31,13 +29,6 @@ import java.util.stream.Collectors;
 public class ReportController {
 
     private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
-
-    private final TacklePenaltyRepository _tpr;
-
-    @Autowired
-    public ReportController(TacklePenaltyRepository tpr) {
-        _tpr = tpr;
-    }
 
     @RequestMapping("")
     public String home(Model model, HttpSession session) {
@@ -82,10 +73,12 @@ public class ReportController {
      * Get combined list for the dropdown.
      * First all referees sorted A-Z, then all teams sorted A-Z.
      * Not merged alphabetically.
+     * Uses TacklePenaltyDAO (JDBC) only, no JPA / _tpr.
      */
     private List<String> getAllRefereeTeamNames() {
-        List<String> refereesList = _tpr.findDistinctReferees();
-        List<String> teamNames = _tpr.findAllDistinctTeamNames();
+        TacklePenaltyDAO dao = new TacklePenaltyDAO();
+        List<String> refereesList = dao.selectDistinctReferees();
+        List<String> teamNames = dao.selectDistinctTeamNames();
 
         if (refereesList == null) {
             refereesList = new ArrayList<>();
