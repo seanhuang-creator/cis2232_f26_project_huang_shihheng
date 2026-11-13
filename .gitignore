@@ -25,7 +25,16 @@ replay_pid*
 
 # --- IntelliJ IDEA ---
 .idea/
+**/.idea/
 *.iml
 *.iws
 *.ipr
+
+# --- Build output ---
+# target/ only matches root, **/target/ matches Project/penalty_tracking_app/target/ too
 target/
+**/target/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
