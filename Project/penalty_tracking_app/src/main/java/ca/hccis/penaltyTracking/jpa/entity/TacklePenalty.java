@@ -10,7 +10,7 @@ import java.util.Objects;
  * tackle football game (see the project topic document fields).
  */
 @Entity
-@Table(name = "TacklePenalty")
+@Table(name = "tacklepenalty")
 public class TacklePenalty {
 
     //This is added to this jpa entity class as an example of @Transient.  If you add attributes to this

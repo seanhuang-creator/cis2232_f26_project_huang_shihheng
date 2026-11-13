@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 import java.time.Instant;
 
 @Entity
-@Table(name = "CodeValue")
+@Table(name = "codevalue")
 public class CodeValue {
     @EmbeddedId
     private CodeValueId id;
