@@ -1,261 +1,134 @@
 # PEIFOA 2026 Tackle Penalty Tracker
 
-- **Course:** CIS 2232 - Object-Orient Programming I
-- **Instructor:** BJ MacLean
+An app for PEIFOA officials to track tackle penalties and view team discipline.
+
+For each penalty, it will keep track of which teams played, which team was penalized, which referee made the call, and how much impact the penalty had.
+
+Officials will be able to see team discipline based on total impact score, and run reports by referee / team or by impact score range.
 
 ## Development Team
 
-| Role | Name |
-|------|------|
-| Business Client | Jake Henderson |
-| Lead Developer | Sean Huang |
-| Project Manager / QA | Jonathan |
+BA / Business Client: Jake Henderson
 
----
+Developer: Sean Huang
 
-## Description
+Project Manager / QA: Jonathan
 
-The Prince Edward Island Football Officials Association (PEIFOA) oversees officiating for amateur tackle football across the province. Every week, officials refereeing these island matchups submit penalty sheets documenting every flag thrown during a game.
+## Fields
 
-While this data is invaluable, managing it through static emails makes it difficult to analyze trends, track team discipline, or evaluate officiating consistency. This project introduces a **centralized Penalty Tracker Application** designed to streamline data entry and transform raw game summaries into actionable insights.
+| Name | Data Type | Description |
+| --- | --- | --- |
+| id | int | Unique id for the penalty. |
+| homeTeam | String | Name of the home team. |
+| awayTeam | String | Name of the away team. |
+| date | String | Game date (yyyy-MM-dd). |
+| penalty | String | Infraction type. |
+| quarter | int | Quarter (1-4). |
+| penalizedTeam | String | Team that committed the penalty. |
+| offendingPlayer | int | Player number who committed the penalty. |
+| ageDivision | String | Age division (e.g. AFL, U18, U15). |
+| referee | String | Official who made the call. |
+| impactScore | double | Calculated impact score. |
 
-### Key Features
+## Calculation
 
-- **Automated Data Entry:** Captures vital game context including date, teams, age division, infraction type, and the official who made the call
-- **Impact Score Calculation:** Automatically calculates a weighted impact score based on penalty severity and game quarter
-- **JSON Storage:** Persist penalty records to local JSON files for easy data management
-- **History Integration:** Loads and displays historical penalty data from real PEIFOA game records
+Impact Score = Severity x Quarter Multiplier
 
----
-
-## Impact Score Calculation Formula
-
-The application calculates an **Impact Score** for each penalty based on two factors:
-
-### 1. Penalty Severity (Base Score)
+### Severity
 
 | Infraction Category | Base Score | Example Penalties |
-|---------------------|------------|-------------------|
-| Mouth Guard Warning | 0.5 | Mouth Guard Warning, Equipment Warning |
-| Minor | 1.0 | Offside, Procedure, No Yards, Time Count Violation, Illegal Formation, Illegal Equipment, Illegal Kick Out of Bounds, Intentional Grounding |
+| --- | --- | --- |
+| Mouth Guard Warning | 0.5 | Mouth Guard Warning |
+| Minor | 1.0 | Offside, Procedure, No Yards, Time Count Violation, Illegal Formation, Illegal Kick Out of Bounds, Intentional Grounding |
 | Moderate | 2.0 | Holding, Illegal Use of Hands, Illegal Block in the Back, Tandem Buck Block, Objectionable Conduct, Default |
 | Pass Interference | 3.0 | Pass Interference |
 | Safety Related | 5.0 | Unnecessary Roughness, Personal Foul |
 
-### 2. Quarter Multiplier
-
-The later in the game a penalty occurs, the higher its potential impact on the outcome:
+### Quarter Multiplier
 
 | Quarter | Multiplier |
-|---------|------------|
+| --- | --- |
 | Q1 | 1.0x |
 | Q2 | 1.25x |
 | Q3 | 1.5x |
 | Q4 | 2.0x |
 
-### Formula
-
-```
-Impact Score = Base Score × Quarter Multiplier
-```
-
 ### Examples
 
 | Penalty | Quarter | Calculation | Impact Score |
-|---------|---------|-------------|--------------|
-| Offside | Q1 | 1.0 × 1.0 | 1.0 |
-| Holding | Q2 | 2.0 × 1.25 | 2.5 |
-| Pass Interference | Q3 | 3.0 × 1.5 | 4.5 |
-| Personal Foul | Q4 | 5.0 × 2.0 | 10.0 |
+| --- | --- | --- | --- |
+| Offside | Q1 | 1.0 x 1.0 | 1.0 |
+| Holding | Q2 | 2.0 x 1.25 | 2.5 |
+| Pass Interference | Q3 | 3.0 x 1.5 | 4.5 |
+| Personal Foul | Q4 | 5.0 x 2.0 | 10.0 |
 
----
+## Report
 
-## Project Structure
+### Home Page
 
-```
-cis2232_assignment2_penalty_tracker_huang_shihheng/
-├── src/
-│   ├── main/
-│   │   ├── java/ca/hccis/penaltytracker/
-│   │   │   ├── Controller.java          # Main entry point, menu navigation
-│   │   │   ├── bo/
-│   │   │   │   └── PenaltyTrackerBO.java # Business logic, calculate() method
-│   │   │   ├── entity/
-│   │   │   │   └── PenaltyTracker.java   # Data model
-│   │   │   └── util/
-│   │   │       └── CisUtility.java       # Utility helper methods
-│   │   └── resources/
-│   │       └── penaltiesHistory.json     # Historical penalty data
-│   └── test/
-│       └── java/ca/hccis/penaltytracker/
-│           └── bo/
-│               └── PenaltyTrackerBOTest.java # JUnit test suite
-└── pom.xml                               # Maven build configuration
-```
+On the home page, teams are displayed in order of total impact score (sorted in descending order).
 
----
+A chart displays total impact score by penalized team. A time range filter is available: All, 1 Year, 6 Months, 3 Months, 1 Month.
 
-## Requirements Implemented
+### Report 1: Referee / Team Report
 
-### Requirement 1: Test Driven Development (TDD)
+Select a name from the dropdown and get a list of all penalties for that referee or team.
 
-- Developed using the **Test Driven Development** approach (Red-Green-Refactor)
-- Created **3 JUnit tests** for the `calculate()` method in `PenaltyTrackerBO`
-- Each test includes Javadoc notes indicating TDD methodology
-- Utilizes multiple assertion methods: `assertEquals`, `assertTrue`, `assertNotNull`
+The dropdown lists referees A-Z first, then teams A-Z.
 
-### Requirement 2: AI for Test Generation
+Input: One referee name or team name from the dropdown.
 
-- AI-generated test suite provides comprehensive unit testing coverage
-- Tests include edge cases: null handling, unknown penalties, invalid quarters
-- Data-driven integration tests using real `penaltiesHistory.json` dataset
+Search: Partial keyword matching with `LIKE %name%`. The search checks referee, homeTeam, awayTeam, and penalizedTeam.
 
----
+Processing: `TacklePenaltyBO.processSelectAllByRefereeTeamName()` -> `TacklePenaltyDAO` using JDBC (DriverManager, PreparedStatement, ResultSet). No JPA for this report.
+
+SQL: `SELECT * FROM TacklePenalty WHERE referee LIKE '%name%' OR homeTeam LIKE '%name%' OR awayTeam LIKE '%name%' OR penalizedTeam LIKE '%name%'`
+
+Display: Table with all matching penalty records + KPI (Total Count, Average Impact, Max Impact) + 6 Charts (Penalty Type Distribution, Avg Impact by Type, Quarter Distribution, Penalized Team Count, Date Trend, Age Division Analysis).
+
+File: Auto export to `c:\cis2232\PenaltyByReferee_<name>_<yyyyMMddHHmmss>.txt`. The folder is created with `mkdirs()` if it does not exist. One file per report run.
+
+### Report 2: Impact Score Range Report
+
+Enter a minimum and maximum impact score and get a list of all penalties within that range.
+
+Input: Minimum impact score and maximum impact score (e.g. 3.0 to 4.0).
+
+Search: `WHERE impactScore BETWEEN min AND max`.
+
+Processing: `TacklePenaltyDAO.selectAllByImpactScoreMinMax()` using JDBC. No JPA for this report.
+
+Display: Table with all penalties within the score range + KPI (Total Count, Average Impact, Max Impact) + Same 6 Charts as Report 1.
+
+File: Auto export to `c:\cis2232\PenaltyByScore_<min>-<max>_<yyyyMMddHHmmss>.txt`. The folder is created with `mkdirs()` if it does not exist. One file per report run.
+
+### File Format (Report 1 and Report 2)
+
+Each file contains all 11 fields for each record. Impact score is shown with 2 decimal places. There is a blank line between records.
 
 ## How to Run
 
 ### Prerequisites
 
-- Java Development Kit (JDK) 8 or higher
+- Java 17 or higher
 - Maven 3.6+
+- MySQL
 
-### Build and Run
+### Steps
 
-```bash
-# Compile the project
-mvn clean compile
-
-# Run the application
-mvn exec:java -Dexec.mainClass="ca.hccis.penaltytracker.Controller"
-
-# Run tests
-mvn test
-```
-
-### Usage
-
-Upon running, the application presents a simple menu:
-
-```
-A) Add
-V) View
-X) eXit
-Option:
-```
-
-- **A)** Add a new penalty record (auto-assigns ID, calculates Impact Score)
-- **V)** View all penalty records (historical + user-added)
-- **X)** Exit the application
-
----
-
-## Unit Test Summary
-
-### TDD Tests (Requirement 1)
-
-| Test Name | Description | Expected Result |
-|-----------|-------------|-----------------|
-| `testCalculateMinorPenaltyInQ1` | Offside penalty in Q1 | 1.0 × 1.0 = 1.0 |
-| `testCalculateSeverePenaltyInQ4` | Personal Foul in Q4 | 5.0 × 2.0 = 10.0 |
-| `testCalculateUpdatesEntityImpactScore` | Holding in Q2 | 2.0 × 1.25 = 2.5 |
-
-### AI-Generated Tests (Requirement 2)
-
-| Test Name | Description | Expected Result |
-|-----------|-------------|-----------------|
-| `testCalculateNullEntity` | Null entity handling | Returns 0.0 |
-| `testCalculateUnknownPenalty` | Unrecognized penalty type | Default 2.0 × multiplier |
-| `testCalculateInvalidQuarter` | Invalid quarter value | Defaults to 1.0x multiplier |
-
-### Data Integration Test
-
-| Test Name | Description |
-|-----------|-------------|
-| `testCalculateAllHistoryRecordsFromJson` | Validates calculation against all 78 real PEIFOA penalty records |
-
----
-
-## Data Fields
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | `int` | Unique identifier (auto-assigned) |
-| `homeTeam` | `String` | Name of the home team |
-| `awayTeam` | `String` | Name of the away team |
-| `date` | `String` | Game date (yyyy-MM-dd) |
-| `penalty` | `String` | Infraction type |
-| `quarter` | `int` | Quarter (1-4) |
-| `penalizedTeam` | `String` | Team that committed the penalty |
-| `ageDivision` | `String` | Age division (e.g., AFL, U18, U15) |
-| `referee` | `String` | Official who made the call |
-| `impactScore` | `double` | Calculated impact score |
-
----
+1. Create the database and run the seed file to load penalty records.
+2. Check `application.properties` for the database URL, username, and password.
+3. Run the Spring Boot application.
+4. Open the home page, add / view penalties, and run Report 1 or Report 2.
 
 ## Technologies Used
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Java | 8+ | Programming language |
-| Maven | 3.6+ | Build automation |
-| JUnit 5 | 5.10.0 | Unit testing framework |
-| Gson | 2.8.5 | JSON serialization/deserialization |
-
----
-
-## Programming Standards
-
-This project follows strict Java programming standards:
-
-- **Naming Conventions:** CamelCase for classes, camelCase for methods/variables
-- **Commenting:** Comprehensive Javadoc for all public classes and methods
-- **Formatting:** Consistent indentation (4 spaces), proper brace placement
-- **Encapsulation:** Private fields with public getters/setters
-- **Error Handling:** Graceful handling of null values and invalid inputs
-
----
-
-## Future Enhancements
-
-- [ ] GUI interface (JavaFX)
-- [ ] Database integration (SQLite/MySQL)
-- [ ] Advanced analytics and reporting
-- [ ] Export to CSV/PDF
-- [ ] Team discipline leaderboard
-- [ ] Referee workload dashboard
-
----
-
-## Report Requirements - Sprint 2 (JDBC + File I/O + Chart 5%)
-
-This sprint implements reports using DAO with JDBC and File I/O export to `c:\cis2232\`.
-
-### Report 1: Referee / Team Report
-* **Input & Search:** Enter a referee name or team name (supports partial keyword matching using `LIKE %name%`, e.g., `Chris`). The system searches across referee names, home teams, away teams, and penalized teams.
-* **Processing:** `TacklePenaltyBO.processSelectAllByRefereeTeamName()` -> `TacklePenaltyDAO` using JDBC (DriverManager, Statement, ResultSet)
-* **SQL Query:** `SELECT * FROM TacklePenalty WHERE referee LIKE '%name%' OR homeTeam LIKE '%name%' OR awayTeam LIKE '%name%' OR penalizedTeam LIKE '%name%'`
-* **Expected Display:** Table with all matching penalty records + 6 Charts (Penalty Type Distribution, Avg Impact by Type, Quarter Distribution, Penalized Team Count, Date Trend, Age Division Analysis) + KPI (Total Count, Average Impact, Max Impact)
-* **File I/O:** Auto export to `c:\cis2232\PenaltyByReferee_<name>_<yyyyMMddHHmmss>.txt` with `mkdirs()` if directory not exists
-
-### Report 2: Impact Score Range Report  
-* **Input & Filtering:** Enter a minimum and maximum impact score range (e.g., `3.0` to `4.0`) to filter and view all penalties falling within that score threshold.
-* **Processing:** `TacklePenaltyDAO.selectAllByImpactScoreMinMax()` using JDBC
-* **SQL Query:** `SELECT * FROM TacklePenalty WHERE impactScore BETWEEN min AND max`
-* **Expected Display:** Table with all penalties within score range + Same 6 Charts + KPI as Report 1
-* **File I/O:** Auto export to `c:\cis2232\PenaltyByScore_<min>-<max>_<yyyyMMddHHmmss>.txt` with `mkdirs()` if directory not exists
-
-**Additional:** Both reports include chart worth 5% grade, implemented with Chart.js. File export is automatic upon report submission.
-
----
-
-## License
-
-Sample project for CIS 2232 educational purposes.
-
----
-
-## Acknowledgments
-
-- **Course Instructor:** CIS 2232 Teaching Team
-- **Business Client:** Jake Henderson
-- **Official Dataset:** Prince Edward Island Football Officials Association (PEIFOA)
+| Technology | Purpose |
+| --- | --- |
+| Java | Programming language |
+| Spring Boot | Web application |
+| MySQL | Database |
+| JDBC / DAO | Data access for reports |
+| Chart.js | Charts for reports and home page |
+| Thymeleaf | Web pages |
+| JUnit | Unit testing |
