@@ -12,7 +12,7 @@ BA / Business Client: Jake Henderson
 
 Developer: Sean Huang
 
-Project Manager / QA: Jonathan
+Project Manager / QA: Jonathan Dumaguing
 
 ## Fields
 
