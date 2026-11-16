@@ -13,17 +13,17 @@
     <div class="field">
         <label class="label">Time Range</label>
         <div class="control">
-            <div class="select" th:onChange="javascript:this.form.submit()">
-                <form th:action="@{/}" method="get" style="display: inline;">
-                    <select name="timeRange">
+            <form th:action="@{/}" method="get" style="display: inline;">
+                <div class="select">
+                    <select name="timeRange" onchange="this.form.submit()">
                         <option th:value="all" th:selected="${timeRange == 'all'}">All Time</option>
                         <option th:value="1year" th:selected="${timeRange == '1year'}">Past Year</option>
                         <option th:value="6months" th:selected="${timeRange == '6months'}">Past 6 Months</option>
                         <option th:value="3months" th:selected="${timeRange == '3months'}">Past 3 Months</option>
                         <option th:value="1month" th:selected="${timeRange == '1month'}">Past Month</option>
                     </select>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
     <p class="is-size-7" th:if="${timeRange != 'all'}">

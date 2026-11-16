@@ -33,16 +33,20 @@ label {
 <div class="container has-text-centered">
     <h2 class="title is-2" th:text="#{label.report.score.range}">_</h2>
     <form th:action="@{/report/penalty/score/submit}" method="post" class="wbb"
-          style="display:inline-block;text-align:left!important">
-        <label for="minScore">Min Impact Score: </label><br/>
-        <input id="minScore" type="number" step="0.1" th:field="${reportInput.minScore}"><br/>
-        <label>Max Impact Score: </label><br/>
-        <input type="number" step="0.1" th:field="${reportInput.maxScore}"><br/>
-        <br/>
-        <button style="display:block;margin-top:24px!important" class="centered">Submit</button>
+          style="display:inline-block;text-align:left!important; padding-top: 16px !important; padding-left: 12px !important; padding-right: 12px !important; margin-bottom: 28px !important;">
+        <div style="margin-bottom: 20px;">
+            <label for="minScore">Min Impact Score: </label>
+            <input id="minScore" type="number" step="any" th:field="${reportInput.minScore}" style="display:block; float:none; width:100%; margin-top: 4px;">
+        </div>
+        <div style="margin-bottom: 30px;">
+            <label>Max Impact Score: </label>
+            <input type="number" step="any" th:field="${reportInput.maxScore}" style="display:block; float:none; width:100%; margin-top: 4px;">
+        </div>
+        <button style="display:block!important; margin-top:24px!important" class="centered">Submit</button>
     </form>
     <p th:if="${not #strings.isEmpty(message)}" th:text="#{error.message.no.data.found.name}">not found</p>
-    <table class="wbb centered" th:if="${not #lists.isEmpty(reportInput.tacklePenalties)}" style="margin-top:24px">
+    <div th:if="${not #lists.isEmpty(reportInput.tacklePenalties)}" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch;">
+        <table class="wbb centered" style="margin-top:24px; min-width: 1100px; white-space: nowrap;">
         <thead>
         <tr>
             <th>ID</th><th>Date</th><th>Home Team</th><th>Away Team</th><th>Penalty</th><th>Quarter</th><th>Penalized Team</th><th>Offending Player</th><th>Age Division</th><th>Referee</th><th>Impact Score</th>
@@ -54,6 +58,7 @@ label {
         </tr>
         </tbody>
     </table>
+    </div>
     <div th:if="${not #lists.isEmpty(reportInput.tacklePenalties)}" style="margin-top:40px; text-align:left">
         <div class="columns is-multiline is-centered" style="max-width:900px; margin:0 auto 24px auto">
             <div class="column is-4"><div class="box has-text-centered"><p class="heading">Total Penalties</p><p class="title is-4" th:text="${reportInput.totalCount}">0</p></div></div>

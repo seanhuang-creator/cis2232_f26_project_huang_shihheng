@@ -2,6 +2,8 @@ package ca.hccis.penaltyTracking.entity;
 
 import ca.hccis.penaltyTracking.jpa.entity.TacklePenalty;
 
+import jakarta.validation.Valid;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import java.util.List;
  * DTO to hold a list of TacklePenalty records for the list edit page.
  */
 public class TacklePenaltyDto {
+    @Valid
     private List<TacklePenalty> penalties;
 
     // default and parameterized constructor

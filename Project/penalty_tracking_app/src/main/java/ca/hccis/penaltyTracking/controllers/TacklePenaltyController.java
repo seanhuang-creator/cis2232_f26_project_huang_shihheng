@@ -18,6 +18,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Controller to administer the TacklePenalty crud.
@@ -76,6 +78,7 @@ public class TacklePenaltyController {
         Iterable<TacklePenalty> penalties = _tpr.findAll();
         model.addAttribute("penalties", penalties);
         model.addAttribute("penalty", new TacklePenalty());
+        model.addAttribute("referees", getAllRefereeTeamNames());
         return "tacklepenalty/list";
     }
 
@@ -99,6 +102,7 @@ public class TacklePenaltyController {
         Iterable<TacklePenalty> penalties = _tpr.findAll();
         model.addAttribute("penalties", penalties);
         model.addAttribute("penalty", new TacklePenalty());
+        model.addAttribute("referees", getAllRefereeTeamNames());
         return "tacklepenalty/list";
     }
 
@@ -189,6 +193,7 @@ public class TacklePenaltyController {
         Iterable<TacklePenalty> penalties = _tpr.findAll();
         model.addAttribute("penalties", penalties);
         model.addAttribute("penalty", new TacklePenalty());
+        model.addAttribute("referees", getAllRefereeTeamNames());
         return "tacklepenalty/list";
     }
 
@@ -221,6 +226,9 @@ public class TacklePenaltyController {
             }
             System.out.println("--------------------------------------------");
             tacklePenalty.setImpactScore(0.0);
+            if (tacklePenalty.getHomeTeam() != null && tacklePenalty.getHomeTeam().equalsIgnoreCase(tacklePenalty.getAwayTeam())) {
+                tacklePenalty.setAwayTeam(null);
+            }
             model.addAttribute("tacklePenalty", tacklePenalty);
 
             // Ensure penaltyTypes and ageDivisions are in session
@@ -280,7 +288,20 @@ public class TacklePenaltyController {
         penaltiesSet.addAll(penaltiesReferee);
 
         model.addAttribute("penalties", penaltiesSet);
+        model.addAttribute("referees", getAllRefereeTeamNames());
         logger.debug("searched for name:" + name);
+        return "tacklepenalty/list";
+    }
+
+    @RequestMapping("/searchByPenalty")
+    public String searchByPenalty(Model model, @RequestParam(value = "selectedPenalty", required = false) String selectedPenalty) {
+        if (selectedPenalty == null || selectedPenalty.isBlank()) {
+            return "redirect:/tacklepenalty";
+        }
+        List<TacklePenalty> penalties = _tpr.findByPenaltyContaining(selectedPenalty);
+        model.addAttribute("penalties", penalties);
+        model.addAttribute("penalty", new TacklePenalty());
+        model.addAttribute("referees", getAllRefereeTeamNames());
         return "tacklepenalty/list";
     }
 
@@ -316,7 +337,13 @@ public class TacklePenaltyController {
      * @since 20260925
      */
     @RequestMapping("/list/edit/submit")
-    public String listEditSubmit(@ModelAttribute TacklePenaltyDto form, Model model) {
+    public String listEditSubmit(@Valid @ModelAttribute("form") TacklePenaltyDto form, BindingResult bindingResult, Model model) {
+
+        // Same Entity validation as Add / Edit single submit - do not save if any row fails
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("form", form);
+            return "tacklepenalty/listedit";
+        }
 
         //Recalculate all impact scores before saving
         form.getPenalties().forEach(TacklePenaltyBO::calculateImpactScore);
@@ -334,5 +361,59 @@ public class TacklePenaltyController {
         model.addAttribute("form", tacklePenaltyForm);
         return "tacklepenalty/listedit";
 
+    }
+
+    /**
+     * Get combined list for the dropdown.
+     * First all referees sorted A-Z, then all teams sorted A-Z.
+     * Same logic as ReportController, but using JPA _tpr.
+     */
+    private List<String> getAllRefereeTeamNames() {
+        List<String> refereesList = _tpr.findDistinctReferees();
+        List<String> teamNames = _tpr.findAllDistinctTeamNames();
+
+        if (refereesList == null) {
+            refereesList = new ArrayList<>();
+        }
+        if (teamNames == null) {
+            teamNames = new ArrayList<>();
+        }
+
+        // Clean: drop null / blank, trim
+        List<String> cleanReferees = new ArrayList<>();
+        for (String s : refereesList) {
+            if (s != null && !s.trim().isEmpty()) {
+                cleanReferees.add(s.trim());
+            }
+        }
+        List<String> cleanTeams = new ArrayList<>();
+        for (String s : teamNames) {
+            if (s != null && !s.trim().isEmpty()) {
+                cleanTeams.add(s.trim());
+            }
+        }
+
+        // Sort each group separately A-Z
+        cleanReferees.sort(String.CASE_INSENSITIVE_ORDER);
+        cleanTeams.sort(String.CASE_INSENSITIVE_ORDER);
+
+        // Referees first, then teams. Dedupe case-insensitively so the same name is not shown twice.
+        List<String> result = new ArrayList<>();
+        Set<String> seenLower = new HashSet<>();
+        for (String s : cleanReferees) {
+            String key = s.toLowerCase();
+            if (!seenLower.contains(key)) {
+                seenLower.add(key);
+                result.add(s);
+            }
+        }
+        for (String s : cleanTeams) {
+            String key = s.toLowerCase();
+            if (!seenLower.contains(key)) {
+                seenLower.add(key);
+                result.add(s);
+            }
+        }
+        return result;
     }
 }

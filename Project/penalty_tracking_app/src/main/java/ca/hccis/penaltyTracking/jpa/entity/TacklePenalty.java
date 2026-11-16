@@ -1,8 +1,8 @@
 package ca.hccis.penaltyTracking.jpa.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.AssertTrue;
 import java.util.Objects;
 
 /**
@@ -19,7 +19,7 @@ public class TacklePenalty {
     private String searchName;
 
     public TacklePenalty() {
-        this.quarter = 0;
+        this.quarter = null;
         this.impactScore = 0.0;
     }
 
@@ -28,45 +28,50 @@ public class TacklePenalty {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Size(min = 1, max = 50)
-    @NotNull
+    @Size(min = 1, max = 50, message = "Home Team is required")
+    @NotNull(message = "Home Team is required")
     @Column(name = "homeTeam", nullable = false, length = 50)
     private String homeTeam;
 
-    @Size(min = 1, max = 50)
-    @NotNull
+    @Size(min = 1, max = 50, message = "Away Team is required")
+    @NotNull(message = "Away Team is required")
     @Column(name = "awayTeam", nullable = false, length = 50)
     private String awayTeam;
 
-    @Size(min = 1, max = 10)
-    @NotNull
+    @NotBlank(message = "Game Date is required")
+    @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "Game Date must be yyyy-MM-dd")
     @Column(name = "date", nullable = false, length = 10)
     private String date;
 
-    @Size(min = 1, max = 50)
-    @NotNull
+    @Size(min = 1, max = 50, message = "Penalty Type is required")
+    @NotNull(message = "Penalty Type is required")
     @Column(name = "penalty", nullable = false, length = 50)
     private String penalty;
 
-    @NotNull
+    @NotNull(message = "Quarter is required")
+    @Min(value = 1, message = "Quarter must be between 1 and 4")
+    @Max(value = 4, message = "Quarter must be between 1 and 4")
     @Column(name = "quarter", nullable = false)
     private Integer quarter;
 
-    @Size(min = 1, max = 50)
-    @NotNull
+    @Size(min = 1, max = 50, message = "Penalized Team is required")
+    @NotNull(message = "Penalized Team is required")
     @Column(name = "penalizedTeam", nullable = false, length = 50)
     private String penalizedTeam;
 
+    @NotNull(message = "Offending Player # is required")
+    @Min(value = 0, message = "Offending Player # must be between 0 and 99")
+    @Max(value = 99, message = "Offending Player # must be between 0 and 99")
     @Column(name = "offendingPlayer")
     private Integer offendingPlayer;
 
-    @Size(min = 1, max = 20)
-    @NotNull
+    @Size(min = 1, max = 20, message = "Age Division is required")
+    @NotNull(message = "Age Division is required")
     @Column(name = "ageDivision", nullable = false, length = 20)
     private String ageDivision;
 
-    @Size(min = 1, max = 50)
-    @NotNull
+    @Size(min = 1, max = 50, message = "Referee is required")
+    @NotNull(message = "Referee is required")
     @Column(name = "referee", nullable = false, length = 50)
     private String referee;
 
@@ -163,6 +168,13 @@ public class TacklePenalty {
 
     public String getSearchName() {
         return searchName;
+    }
+
+    @AssertTrue(message = "Away Team cannot be the same as Home Team.")
+    public boolean isHomeAwayDifferent() {
+        if (homeTeam == null || awayTeam == null) return true;
+        if (homeTeam.isBlank() || awayTeam.isBlank()) return true;
+        return !homeTeam.equalsIgnoreCase(awayTeam);
     }
 
     public void setSearchName(String searchName) {

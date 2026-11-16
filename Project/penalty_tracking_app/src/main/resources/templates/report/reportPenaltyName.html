@@ -34,7 +34,7 @@ label {
 <div class="container has-text-centered">
     <h2 class="title is-2" th:text="#{label.report.referee.team.report}">_</h2>
     <form th:action="@{/report/penalty/name/submit}" method="post" class="wbb"
-          style="display:inline-block;text-align:left!important">
+          style="display:inline-block;text-align:left!important; padding: 16px 16px 12px 16px !important; margin-bottom: 28px !important;">
         <input type="hidden" id="refereeValue" name="name" th:value="${reportInput.name}" />
         <p>
             <label>Name (Referee/Team): </label>
@@ -49,8 +49,7 @@ label {
             </select>
             <input type="text" id="refereeManual" style="display:none; margin-top: 8px;" placeholder="Enter name manually" />
         </p>
-        <br></br>
-        <button style="display:block;margin-top:24px!important" class="centered">Submit</button>
+        <button style="display:block !important; margin: 32px auto 0 auto !important;" class="centered">Submit</button>
     </form>
     <script>
         function handleRefereeSelect() {
@@ -101,7 +100,8 @@ label {
         });
     </script>
     <p th:if="${not #strings.isEmpty(message)}" th:text="#{error.message.no.data.found.name}">not found</p>
-    <table class="wbb centered" th:if="${not #lists.isEmpty(reportInput.tacklePenalties)}" style="margin-top:24px">
+    <div th:if="${not #lists.isEmpty(reportInput.tacklePenalties)}" style="overflow-x: auto; width: 100%; -webkit-overflow-scrolling: touch;">
+        <table class="wbb centered" style="margin-top:24px; min-width: 1100px; white-space: nowrap;">
         <thead>
         <tr>
             <th>ID</th><th>Date</th><th>Home Team</th><th>Away Team</th><th>Penalty</th><th>Quarter</th><th>Penalized Team</th><th>Offending Player</th><th>Age Division</th><th>Referee</th><th>Impact Score</th>
@@ -113,6 +113,7 @@ label {
         </tr>
         </tbody>
     </table>
+    </div>
     <div th:if="${not #lists.isEmpty(reportInput.tacklePenalties)}" style="margin-top:40px; text-align:left">
         <div class="columns is-multiline is-centered" style="max-width:900px; margin:0 auto 24px auto">
             <div class="column is-4"><div class="box has-text-centered"><p class="heading">Total Penalties</p><p class="title is-4" th:text="${reportInput.totalCount}">0</p></div></div>
