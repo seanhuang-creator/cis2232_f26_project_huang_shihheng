@@ -1,7 +1,7 @@
 package ca.hccis.penaltyTracking.controllers;
 
-import ca.hccis.penaltyTracking.dao.TacklePenaltyDAO;
 import ca.hccis.penaltyTracking.jpa.entity.TacklePenalty;
+import ca.hccis.penaltyTracking.repositories.TacklePenaltyRepository;
 import ca.hccis.penaltyTracking.util.CisUtility;
 
 import jakarta.servlet.http.HttpSession;
@@ -35,6 +35,13 @@ public class BaseController {
     private MessageSource messageSource;
     private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
+    private final TacklePenaltyRepository _tpr;
+
+    @Autowired
+    public BaseController(TacklePenaltyRepository tpr) {
+        _tpr = tpr;
+    }
+
     /**
      * Send the user to the welcome view with team-aggregated impact scores.
      *
@@ -53,12 +60,9 @@ public class BaseController {
         // Calculate the start date based on timeRange
         String startDate = calculateStartDate(timeRange, currentDate);
 
-        // Fetch penalties using DAO (JDBC) only, no JPA / _tpr
-        TacklePenaltyDAO penaltyDAO = new TacklePenaltyDAO();
-        ArrayList<TacklePenalty> allPenalties = penaltyDAO.selectAll();
-        if (allPenalties == null) {
-            allPenalties = new ArrayList<>();
-        }
+        // Fetch penalties using Spring Data JPA repository
+        ArrayList<TacklePenalty> allPenalties = new ArrayList<>();
+        _tpr.findAll().forEach(allPenalties::add);
 
         List<TacklePenalty> penalties;
         if ("all".equals(timeRange)) {

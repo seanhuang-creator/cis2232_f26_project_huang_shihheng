@@ -22,7 +22,7 @@
     <h2 class="title is-2" th:if="${tacklePenalty.id != null}" th:text="#{label.edit.order}">label Edit</h2>
     <h2 class="title is-2" th:if="${tacklePenalty.id == null}" th:text="#{label.add.order}">label Add</h2>
 
-    <form th:action="@{/tacklepenalty/submit}" method="post" class="wbb" style="display:inline-block;text-align:left!important">
+    <form th:action="@{/tacklepenalty/submit}" th:object="${tacklePenalty}" method="post" class="wbb" style="display:inline-block;text-align:left!important">
 
         <!-- Hidden ID field -->
         <input type="hidden" name="id" th:value="${tacklePenalty.id}" />
@@ -36,9 +36,9 @@
 
         <p>
             <label>Game Date:</label>
-            <input type="date" name="date" th:value="${#dates.format(tacklePenalty.date, 'yyyy-MM-dd')}" placeholder="YYYY-MM-DD" />
+            <input type="date" name="date" th:value="${tacklePenalty.date}" placeholder="YYYY-MM-DD" />
         </p>
-        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.date}')}" th:errors="${tacklePenalty.date}"></p>
+        <p class="cd" th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></p>
 
         <p>
             <label>Home Team:</label>
@@ -53,7 +53,7 @@
             </select>
             <input type="text" id="homeTeamManual" style="display:none; margin-top: 8px;" placeholder="Enter team name manually" />
         </p>
-        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.homeTeam}')}" th:errors="${tacklePenalty.homeTeam}"></p>
+        <p class="cd" th:if="${#fields.hasErrors('homeTeam')}" th:errors="*{homeTeam}"></p>
 
         <p>
             <label>Away Team:</label>
@@ -68,7 +68,8 @@
             </select>
             <input type="text" id="awayTeamManual" style="display:none; margin-top: 8px;" placeholder="Enter team name manually" />
         </p>
-        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.awayTeam}')}" th:errors="${tacklePenalty.awayTeam}"></p>
+        <p class="cd" th:if="${#fields.hasErrors('awayTeam')}" th:errors="*{awayTeam}"></p>
+        <p class="cd" th:if="${#fields.hasErrors('homeAwayDifferent')}" th:errors="*{homeAwayDifferent}"></p>
 
         <p>
             <label>Penalty Type:</label>
@@ -106,7 +107,7 @@
                 </optgroup>
             </select>
         </p>
-        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.penalty}')}" th:errors="${tacklePenalty.penalty}"></p>
+        <p class="cd" th:if="${#fields.hasErrors('penalty')}" th:errors="*{penalty}"></p>
 
         <!-- Quarter changed to dropdown -->
         <p>
@@ -119,7 +120,7 @@
                 <option value="4" th:selected="${tacklePenalty.quarter == 4}">4</option>
             </select>
         </p>
-        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.quarter}')}" th:errors="${tacklePenalty.quarter}"></p>
+        <p class="cd" th:if="${#fields.hasErrors('quarter')}" th:errors="*{quarter}"></p>
 
         <!-- Penalized Team Dynamic Dropdown -->
         <p>
@@ -128,13 +129,13 @@
                 <option value="" disabled selected hidden>-- Select Team --</option>
             </select>
         </p>
-        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.penalizedTeam}')}" th:errors="${tacklePenalty.penalizedTeam}"></p>
+        <p class="cd" th:if="${#fields.hasErrors('penalizedTeam')}" th:errors="*{penalizedTeam}"></p>
 
         <p>
             <label>Offending Player #:</label>
             <input type="number" min="0" name="offendingPlayer" th:value="${tacklePenalty.offendingPlayer}" />
         </p>
-        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.offendingPlayer}')}" th:errors="${tacklePenalty.offendingPlayer}"></p>
+        <p class="cd" th:if="${#fields.hasErrors('offendingPlayer')}" th:errors="*{offendingPlayer}"></p>
 
         <p>
             <label>Age Division:</label>
@@ -146,7 +147,7 @@
                         th:selected="${codeValue.englishDescription == tacklePenalty.ageDivision}"></option>
             </select>
         </p>
-        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.ageDivision}')}" th:errors="${tacklePenalty.ageDivision}"></p>
+        <p class="cd" th:if="${#fields.hasErrors('ageDivision')}" th:errors="*{ageDivision}"></p>
 
         <!-- Dynamic Referee Dropdown -->
         <p>
@@ -162,13 +163,13 @@
             </select>
             <input type="text" id="refereeManual" style="display:none; margin-top: 8px;" placeholder="Enter referee name manually" />
         </p>
-        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.referee}')}" th:errors="${tacklePenalty.referee}"></p>
+        <p class="cd" th:if="${#fields.hasErrors('referee')}" th:errors="*{referee}"></p>
 
         <p>
             <label>Impact Score (calculated):</label>
-            <input type="number" step="0.1" id="impactScoreInput" name="impactScore" th:value="${tacklePenalty.impactScore}" readonly="readonly" />
+            <input type="number" step="any" id="impactScoreInput" name="impactScore" th:value="${tacklePenalty.impactScore}" readonly="readonly" />
         </p>
-        <p class="cd" th:if="${#fields.hasErrors('${tacklePenalty.impactScore}')}" th:errors="${tacklePenalty.impactScore}"></p>
+        <p class="cd" th:if="${#fields.hasErrors('impactScore')}" th:errors="*{impactScore}"></p>
 
         <!-- Submit & Cancel buttons -->
         <div style="display: flex; gap: 12px; justify-content: center; margin-top: 24px !important;">
@@ -235,13 +236,13 @@
                 let multiplier = 1.0;
                 switch (quarter) {
                     case 1: multiplier = 1.0; break;
-                    case 2: multiplier = 1.25; break; // ✅ 修改為 1.25
-                    case 3: multiplier = 1.5; break;  // ✅ 修改為 1.5
-                    case 4: multiplier = 2.0; break;  // ✅ 修改為 2.0
+                    case 2: multiplier = 1.25; break;
+                    case 3: multiplier = 1.5; break;
+                    case 4: multiplier = 2.0; break;
                 }
 
-                // Calculate and display to 1 decimal place
-                const finalScore = (baseScore * multiplier).toFixed(1);
+                // Calculate and display to 2 decimal places to keep 1.25
+                const finalScore = (baseScore * multiplier).toFixed(2);
                 impactInput.value = finalScore;
             }
 
@@ -280,7 +281,6 @@
                     hiddenField.value = select.value;
                 }
 
-                checkDuplicateTeams();
                 updatePenalizedTeamOptions();
             }
 
@@ -292,28 +292,6 @@
                     return manualInput.value.trim();
                 }
                 return select.value;
-            }
-
-            function resetAwayTeam() {
-                const awaySelect = document.getElementById('awayTeamSelect');
-                const awayManual = document.getElementById('awayTeamManual');
-                const awayHidden = document.getElementById('awayTeamValue');
-
-                awaySelect.value = '';
-                awaySelect.style.display = 'block';
-                awayManual.value = '';
-                awayManual.style.display = 'none';
-                awayHidden.value = '';
-            }
-
-            function checkDuplicateTeams() {
-                const homeTeam = getTeamValue('home');
-                const awayTeam = getTeamValue('away');
-
-                if (homeTeam && awayTeam && homeTeam.toLowerCase() === awayTeam.toLowerCase()) {
-                    alert('Away Team cannot be the same as Home Team.');
-                    resetAwayTeam();
-                }
             }
 
             function updatePenalizedTeamOptions() {
@@ -349,50 +327,8 @@
                 }
             }
 
-            function validateForm() {
-                const homeTeam = getTeamValue('home');
-                const awayTeam = getTeamValue('away');
-                const penalizedTeam = document.getElementById('penalizedTeamValue').value;
-
-                if (!homeTeam || !awayTeam) {
-                    alert('Please select or enter both Home Team and Away Team.');
-                    return false;
-                }
-
-                if (homeTeam.toLowerCase() === awayTeam.toLowerCase()) {
-                    alert('Away Team cannot be the same as Home Team.');
-                    resetAwayTeam();
-                    return false;
-                }
-
-                if (!penalizedTeam) {
-                    alert('Please select a Penalized Team.');
-                    return false;
-                }
-
-                return true;
-            }
-
             document.addEventListener('DOMContentLoaded', function() {
                 const penalizedSelect = document.getElementById('penalizedTeamSelect');
-
-                function checkPenalizedAccess(e) {
-                    const homeTeam = getTeamValue('home');
-                    const awayTeam = getTeamValue('away');
-
-                    if (!homeTeam || !awayTeam) {
-                        e.preventDefault();
-                        penalizedSelect.blur();
-                        alert('Please select both Home Team and Away Team first.');
-                    }
-                }
-
-                penalizedSelect.addEventListener('mousedown', checkPenalizedAccess);
-                penalizedSelect.addEventListener('keydown', function(e) {
-                    if (e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowDown') {
-                        checkPenalizedAccess(e);
-                    }
-                });
 
                 penalizedSelect.addEventListener('change', function() {
                     document.getElementById('penalizedTeamValue').value = this.value;
@@ -404,11 +340,6 @@
                 const form = document.querySelector('form.wbb');
                 if (form) {
                     form.addEventListener('submit', function(e) {
-                        if (!validateForm()) {
-                            e.preventDefault();
-                            return;
-                        }
-
                         const homeManual = document.getElementById('homeTeamManual');
                         const awayManual = document.getElementById('awayTeamManual');
                         const refereeManual = document.getElementById('refereeManual');
@@ -442,12 +373,10 @@
                 // Team event listeners
                 document.getElementById('homeTeamManual').addEventListener('input', function() {
                     document.getElementById('homeTeamValue').value = this.value;
-                    checkDuplicateTeams();
                     updatePenalizedTeamOptions();
                 });
                 document.getElementById('awayTeamManual').addEventListener('input', function() {
                     document.getElementById('awayTeamValue').value = this.value;
-                    checkDuplicateTeams();
                     updatePenalizedTeamOptions();
                 });
 
@@ -455,14 +384,12 @@
                     if (this.value && this.value !== '__MANUAL__') {
                         document.getElementById('homeTeamValue').value = this.value;
                     }
-                    checkDuplicateTeams();
                     updatePenalizedTeamOptions();
                 });
                 document.getElementById('awayTeamSelect').addEventListener('change', function() {
                     if (this.value && this.value !== '__MANUAL__') {
                         document.getElementById('awayTeamValue').value = this.value;
                     }
-                    checkDuplicateTeams();
                     updatePenalizedTeamOptions();
                 });
             });

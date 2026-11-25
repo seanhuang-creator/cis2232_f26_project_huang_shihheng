@@ -26,15 +26,13 @@
         <div class="container has-text-centered">
             <h2 class="title is-2" style="margin-bottom:-10px!important">Reports</h2>
             <br></br>
-            <table class="wbb centered" style="padding:0!important;display:inline-block!important">
+            <table class="wbb centered" style="padding:0!important;display:inline-block!important;width:auto!important">
                 <tr>
                     <td><a th:href="@{/report/penalty/name}" th:text="#{label.report.referee.team.report}" >Placeholder report 1</a></td>
-                    <td></td>
-                </tr><!-- comment -->
+                </tr>
                 <tr>
-                    <td><a th:href="@{/report/penalty/score}"th:text="#{label.report.score.range}" >Placeholder report 2</a></td>
-                    <td></td>
-                </tr><!-- comment -->
+                    <td><a th:href="@{/report/penalty/score}" th:text="#{label.report.score.range}" >Placeholder report 2</a></td>
+                </tr>
             </table>
         </div>
         <footer th:replace="fragments/footer :: footer"></footer>

@@ -13,12 +13,20 @@
     <h2 class="mb-3 text-center success" th:if="${not #strings.isEmpty(messageSuccess)}" th:text="${messageSuccess}">
         Message success from controller</h2>
 
-    <div class="table-responsive">
-        <form action="#" th:action="@{/tacklepenalty/list/edit/submit}" th:object="${form}"
-              method="post">
+
+    <form action="#" th:action="@{/tacklepenalty/list/edit/submit}" th:object="${form}"
+          method="post">
+        <input type="submit" id="submitButton" th:value="Save">
+        <input type="reset" id="resetButton" name="reset" th:value="Cancel"/>
+
+        <!-- Entity validation errors - same messages as Add / Edit single form -->
+        <div th:if="${#fields.hasErrors('*')}" style="color:red; margin-top:8px;">
+            <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
+        </div>
+
+        <div class="table-responsive">
             <fieldset>
-                <input type="submit" id="submitButton" th:value="Save">
-                <input type="reset" id="resetButton" name="reset" th:value="Reset"/>
+
                 <table class="table table-striped table-hover align-middle">
                     <thead class="table-dark text-center">
                     <tr>
@@ -61,11 +69,12 @@
                     </tbody>
                 </table>
             </fieldset>
-        </form>
-    </div>
+        </div>
+    </form>
 
 
 </div>
 <footer th:replace="fragments/footer :: footer"></footer>
 </body>
+
 </html>

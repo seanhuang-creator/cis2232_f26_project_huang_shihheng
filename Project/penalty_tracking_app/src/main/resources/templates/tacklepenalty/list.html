@@ -12,18 +12,56 @@
     <h2 class="mb-3 text-center success" th:if="${not #strings.isEmpty(messageSuccess)}" th:text="${messageSuccess}" >Message success from controller</h2>
 
     <!--    Adding for demo of using a CodeValue table for dynamic lists.-->
-    <label for="penaltySelect">Choose a penalty type (for demo of CodeValue only):</label>
-    <select id="penaltySelect" name="selectedPenalty">
-        <option value="" disabled selected hidden>-- Select --</option>
-        <option th:each="codeValue : ${session.penaltyTypes}" th:value="${codeValue.id.codeValueSequence}" th:text="${codeValue.englishDescription}"></option>
-    </select>
+    <form th:action="@{/tacklepenalty/searchByPenalty}" method="post" style="display:inline-block;">
+        <label for="penaltySelect">Choose a penalty type (for demo of CodeValue only):</label>
+        <select id="penaltySelect" name="selectedPenalty">
+            <option value="" disabled selected hidden>-- Select --</option>
+            <option th:each="codeValue : ${session.penaltyTypes}" th:value="${codeValue.englishDescription}" th:text="${codeValue.englishDescription}"></option>
+        </select>
+        <button type="submit">Create Filter</button>
+    </form>
 
     <!--    Adding ability to search by team or referee name-->
-    <form th:object="${penalty}" th:action="@{/tacklepenalty/search}"  method="post">
-        <label for="name" th:text="#{label.search.name}">Team or Referee Name</label>
-        <input type="text" id="name" th:field="${penalty.searchName}"/>
+    <form th:object="${penalty}" th:action="@{/tacklepenalty/search}" method="post">
+        <label for="refereeSelect" th:text="#{label.search.name}">Team or Referee Name</label>
+        <input type="hidden" th:field="*{searchName}" id="searchNameHidden" />
+        <select id="refereeSelect" onchange="handleRefereeSelect()">
+            <option value="" disabled selected hidden>-- Select --</option>
+            <option value="__MANUAL__">(Add Manually)</option>
+            <option th:each="ref : ${referees}"
+                    th:value="${ref}"
+                    th:text="${ref}"
+                    th:if="${ref != null and ref != ''}"
+                    th:selected="${ref == penalty.searchName}"></option>
+        </select>
+        <input type="text" id="refereeManual" style="display:none; margin-top: 8px;" placeholder="Enter name manually" />
         <button type="submit">Search</button>
     </form>
+    <script>
+        function handleRefereeSelect() {
+            const select = document.getElementById('refereeSelect');
+            const manualInput = document.getElementById('refereeManual');
+            const hiddenField = document.getElementById('searchNameHidden');
+            if (select.value === '__MANUAL__') {
+                select.style.display = 'none';
+                manualInput.style.display = 'block';
+                manualInput.focus();
+                hiddenField.value = '';
+            } else {
+                select.style.display = 'block';
+                manualInput.style.display = 'none';
+                manualInput.value = '';
+                hiddenField.value = select.value;
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const manualInput = document.getElementById('refereeManual');
+            const hiddenField = document.getElementById('searchNameHidden');
+            manualInput.addEventListener('input', function() {
+                hiddenField.value = this.value;
+            });
+        });
+    </script>
 
     <table id="theData" class="table table-striped table-hover align-middle" style="width: 100%;">
         <thead class="table-dark text-center">

@@ -36,7 +36,7 @@
 /* --------------- Global Styles --------------- */
 
 html {
-    overflow-x: auto !important;
+    overflow-x: hidden !important;
     background-color: #000000 !important;
 }
 
@@ -65,7 +65,7 @@ body {
     color: #ffffff !important;
     margin: 0 !important;
     padding: 0 !important;
-    overflow-x: auto !important;
+    overflow-x: hidden !important;
 }
 
 /* Global text color fix */
@@ -130,7 +130,6 @@ body, p, strong, th, td, span, div, h1, h2, h3, h4, h5, h6 {
     padding: 20px;
     background: var(--main-color-dark);
     color: var(--main-color-text);
-    bottom: 0;
     width: 100%;
 }
 
@@ -177,7 +176,7 @@ body, p, strong, th, td, span, div, h1, h2, h3, h4, h5, h6 {
 }
 
 .navbar-link:hover, .navbar-link:active {
-    color: var(--main-color-dark) !important;
+    color: #0066ff !important;
 }
 
 .navbar-item:visited {
@@ -636,4 +635,59 @@ Chart box for Referee/Team Report - dark theme compatible
 }
 .box .title {
     color: #ffffff !important;
+}
+
+.table-responsive  {
+    height: calc(100vh - 400px) !important;
+    max-height: calc(100vh - 400px) !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+    display: block !important;
+    width: 100% !important;
+    height: calc(100vh - 278px) !important;
+    max-height: calc(100vh - 278px) !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+}
+
+.listedit-actions {
+    background: #000000;
+    padding: 10px 0;
+}
+
+.table-responsive thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #141414 !important;
+}
+
+
+
+.table-responsive table {
+    min-width: 1250px !important;
+    width: max-content !important;
+}
+
+/* 下拉選單 hover：底色維持白色不動，字變藍色 - 一定要放最下面 */
+.navbar-dropdown a.navbar-item:hover,
+.navbar-dropdown a.navbar-item:focus,
+.navbar-dropdown a.navbar-item:visited:hover,
+.navbar-dropdown a.navbar-item:visited:focus,
+.navbar-dropdown .navbar-item:hover,
+.navbar-dropdown .navbar-item:focus {
+    background-color: #ffffff !important;
+    background: #ffffff !important;
+    color: #0066ff !important;
+}
+
+table.wbb.centered {
+    width: 35% !important;
+    max-width: 900px !important;
+    margin: 0 auto !important;
+}
+
+table.wbb.centered th,
+table.wbb.centered td {
+    padding-left: 16px !important;
 }

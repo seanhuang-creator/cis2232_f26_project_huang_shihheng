@@ -22,28 +22,25 @@
                 <a th:href="@{/tacklepenalty}" href="/tacklepenalty/" class="accent navbar-link">Penalties</a>
                 <div class="accent-background navbar-dropdown">
                     <a th:href="@{/tacklepenalty}" class="accent navbar-item">View</a>
+                    <a th:href="@{/tacklepenalty/add}" class="accent navbar-item">Add</a>
                     <a th:href="@{/tacklepenalty/list/edit}" class="accent navbar-item">List Edit</a>
                 </div>
             </div>
-            <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a th:href="@{/report}" href="/report" class="accent navbar-link">Reports</a>
-                    <div class="accent-background navbar-dropdown">
-                        <a th:href="@{/report/penalty/name}" class="accent navbar-item"
-                           th:text="#{label.report.referee.team.report}">Referee/Team report-placeholder</a>
-                        <a th:href="@{/report/penalty/score}" class="accent navbar-item"
-                           th:text="#{label.report.score.range}">Impact score range report-placeholder</a>
-                    </div>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a th:href="@{/report}" href="/report" class="accent navbar-link">Reports</a>
+                <div class="accent-background navbar-dropdown">
+                    <a th:href="@{/report/penalty/name}" class="accent navbar-item"
+                       th:text="#{label.report.referee.team.report}">Referee/Team report-placeholder</a>
+                    <a th:href="@{/report/penalty/score}" class="accent navbar-item"
+                       th:text="#{label.report.score.range}">Impact score range report-placeholder</a>
                 </div>
-                <div class="navbar-end">
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <a th:href="@{/about}" href="/about" class="accent navbar-link">Other</a>
-                        <div class="accent-background navbar-dropdown">
-                            <a th:href="@{/about}" href="/about" class="accent navbar-item">About</a>
-                            <hr class="navbar-divider">
-                            <a th:href="@{/pirate}" href="/pirate" class="accent navbar-item">Pirate</a>
-                        </div>
-                    </div>
+            </div>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a th:href="@{/about}" href="/about" class="accent navbar-link">Other</a>
+                <div class="accent-background navbar-dropdown">
+                    <a th:href="@{/about}" href="/about" class="accent navbar-item">About</a>
+                    <hr class="navbar-divider">
+                    <a th:href="@{/pirate}" href="/pirate" class="accent navbar-item">Pirate</a>
                 </div>
             </div>
         </div>

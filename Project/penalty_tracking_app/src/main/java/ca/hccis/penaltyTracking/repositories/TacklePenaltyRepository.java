@@ -1,8 +1,8 @@
 package ca.hccis.penaltyTracking.repositories;
 
 import ca.hccis.penaltyTracking.jpa.entity.TacklePenalty;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,12 +14,13 @@ import java.util.List;
  * @since 20260925
  */
 @Repository
-public interface TacklePenaltyRepository extends CrudRepository<TacklePenalty, Integer> {
+public interface TacklePenaltyRepository extends JpaRepository<TacklePenalty, Integer> {
 
     List<TacklePenalty> findByHomeTeamContaining(String name);
     List<TacklePenalty> findByAwayTeamContaining(String name);
     List<TacklePenalty> findByPenalizedTeamContaining(String name);
     List<TacklePenalty> findByRefereeContaining(String name);
+    List<TacklePenalty> findByPenaltyContaining(String penalty);
 
     @Query("SELECT DISTINCT t.homeTeam FROM TacklePenalty t UNION " +
             "SELECT DISTINCT t.awayTeam FROM TacklePenalty t UNION " +
