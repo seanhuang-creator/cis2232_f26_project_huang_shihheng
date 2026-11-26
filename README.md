@@ -132,3 +132,7 @@ Each file contains all 11 fields for each record. Impact score is shown with 2 d
 | Chart.js | Charts for reports and home page |
 | Thymeleaf | Web pages |
 | JUnit | Unit testing |
+
+---
+
+QC check by Sean Huang (Nov 25, 2026): SourceTree commit/push verified, working tree clean.
