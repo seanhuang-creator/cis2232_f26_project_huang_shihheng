@@ -1,10 +1,15 @@
 package ca.hccis.penaltyTracking.rest;
 
 import ca.hccis.penaltyTracking.bo.TacklePenaltyBO;
+import ca.hccis.penaltyTracking.bo.TacklePenaltyValidationBO;
 import ca.hccis.penaltyTracking.jpa.entity.TacklePenalty;
 import ca.hccis.penaltyTracking.repositories.TacklePenaltyRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -29,55 +34,66 @@ public class TacklePenaltyService {
 
     @GetMapping
     public ResponseEntity<List<TacklePenalty>> getAll() {
-
         Iterable<TacklePenalty> penaltiesIterable = repo.findAll();
         List<TacklePenalty> penalties = new ArrayList<>();
         penaltiesIterable.forEach(penalties::add);
-
-        if (penalties == null || penalties.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
         return ResponseEntity.ok(penalties);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TacklePenalty> getById(@PathVariable Integer id) {
-
         return repo.findById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.noContent().build());
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
-
-        return repo.findById(id)
-                .map(entity -> {
-                    repo.delete(entity);
-                    return ResponseEntity.ok().<Void>build();
-                })
-                .orElse(ResponseEntity.noContent().build());
+        if (!repo.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+        repo.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping
-    public ResponseEntity<TacklePenalty> create(
-            @RequestBody TacklePenalty obj) {
+    public ResponseEntity<?> create(@Valid @RequestBody TacklePenalty penalty, BindingResult bindingResult) {
+        List<String> errors = collectErrors(penalty, bindingResult);
+        if (!errors.isEmpty()) {
+            return ResponseEntity.badRequest().body(errors);
+        }
 
-        TacklePenaltyBO.calculateImpactScore(obj);
-        TacklePenalty saved = repo.save(obj);
-
-        return ResponseEntity.ok(saved);
+        penalty.setId(null);
+        TacklePenaltyBO.calculateImpactScore(penalty);
+        TacklePenalty saved = repo.save(penalty);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TacklePenalty> update(
-            @PathVariable Integer id,
-            @RequestBody TacklePenalty obj) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @Valid @RequestBody TacklePenalty penalty, BindingResult bindingResult) {
+        List<String> errors = collectErrors(penalty, bindingResult);
+        if (!errors.isEmpty()) {
+            return ResponseEntity.badRequest().body(errors);
+        }
 
-        obj.setId(id);
-        TacklePenaltyBO.calculateImpactScore(obj);
+        if (!repo.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
 
-        return ResponseEntity.ok(repo.save(obj));
+        penalty.setId(id);
+        TacklePenaltyBO.calculateImpactScore(penalty);
+        TacklePenalty saved = repo.save(penalty);
+        return ResponseEntity.ok(saved);
+    }
+
+    private List<String> collectErrors(TacklePenalty penalty, BindingResult bindingResult) {
+        List<String> errors = new ArrayList<>();
+        if (bindingResult.hasErrors()) {
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                errors.add(error.getDefaultMessage());
+            }
+        }
+        errors.addAll(TacklePenaltyValidationBO.validateTacklePenalty(penalty));
+        return errors;
     }
 }
