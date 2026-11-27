@@ -5,7 +5,6 @@ import ca.hccis.penaltyTracking.bo.TacklePenaltyValidationBO;
 import ca.hccis.penaltyTracking.jpa.entity.TacklePenalty;
 import ca.hccis.penaltyTracking.repositories.TacklePenaltyRepository;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -27,7 +26,6 @@ public class TacklePenaltyService {
 
     private final TacklePenaltyRepository repo;
 
-    @Autowired
     public TacklePenaltyService(TacklePenaltyRepository repo) {
         this.repo = repo;
     }
