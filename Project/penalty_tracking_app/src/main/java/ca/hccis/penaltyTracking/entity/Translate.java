@@ -1,13 +1,12 @@
 package ca.hccis.penaltyTracking.entity;
 
-/**
- * Entity class to hold the attributes of the bus pass related reports.
- * @author bjmaclean
- * @since 20241010
- */
 public class Translate {
+
     private String english;
     private String pirate;
+
+    public Translate() {
+    }
 
     public String getEnglish() {
         return english;
